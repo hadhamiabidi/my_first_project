@@ -1,4 +1,7 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
 
@@ -11,7 +14,9 @@ class OnboardingController extends GetxController {
 
   forwardAction() {
     if (isLastPage) {
-      //go to home page
+      //go to home page  utiliser getX pour naviguer de ecran a un autre
+      Navigator.of(context as BuildContext).pushNamed(login)
+
     } else
       pageController.nextPage(duration: 300.milliseconds, curve: Curves.ease);
   }
