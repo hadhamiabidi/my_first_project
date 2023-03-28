@@ -4,7 +4,7 @@ import 'package:pfe/views/login_page.dart';
 import 'package:pfe/views/onboarding_page.dart';
 import 'package:pfe/views/signup_page.dart';
 void main() {
-  runApp(MyApp());
+  runApp(const GetMaterialApp( home: LoginPage(),));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,12 +19,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: OnboardingPage(),
-    initialRoute: "/" ,
-    routes:
-    {
-      "/login": (contexte) => const Login(authType: AuthType.login),
-      "/signup": (contexte) => const Signup(authType: AuthType.Signup),
-    }
+
     );
   }
 
