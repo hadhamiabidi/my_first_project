@@ -21,7 +21,7 @@ class LoginPage extends StatelessWidget {
               fit: BoxFit.cover,
               height: 230,
               width: 180,)
-            )
+            ),
             const SizedBox(
               height: 40,
             ),
@@ -83,15 +83,14 @@ class LoginPage extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children:  [
                const Text(
                   'Dont have an account?',
                   style: TextStyle(fontSize: 15, color: Colors.white),
                 ),
                 InkWell(
                   onTap: () {
-                     Get.to(const SignupPage());
-    },
+                     Get.to(const SignupPage());},
                   child: const Text(
                     'Signup',
                     style: TextStyle(fontSize: 15, color: Colors.blue),
@@ -113,3 +112,5 @@ class LoginPage extends StatelessWidget {
         ),),),
       ),
     );
+  }
+}
