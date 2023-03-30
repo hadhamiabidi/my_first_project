@@ -2,10 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:pfe/controllers/login_controller.dart';
 import 'package:pfe/views/signup_page.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage ({ Key? key, }) : super(key: key);
+  final _controller = LoginController();
+  LoginPage ({ Key? key, }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,21 +63,26 @@ class LoginPage extends StatelessWidget {
               height: 55,
             ),
             Center(
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.white
-                ),
-                height: 45,
-                width: 90,
-                child: Center(
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 20, color: Color(0xff154C79)),
-
+              child: InkWell(
+                onTap: (){
+                  _controller.goToDashboard();
+                },
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Colors.white
                   ),
-                ),
+                  height: 45,
+                  width: 90,
+                  child: const Center(
+                    child: Text(
+                      'Login',
+                      style: TextStyle(fontSize: 20, color: Color(0xff154C79)),
 
+                    ),
+                  ),
+
+                ),
               ),
             ),
             const SizedBox(
@@ -89,8 +96,9 @@ class LoginPage extends StatelessWidget {
                   style: TextStyle(fontSize: 15, color: Colors.white),
                 ),
                 InkWell(
-                  onTap: () {
-                     Get.to(const SignupPage());},
+                  onTap: (){
+                    _controller.goToRegister();
+                  },
                   child: const Text(
                     'Signup',
                     style: TextStyle(fontSize: 15, color: Colors.blue),
@@ -101,7 +109,7 @@ class LoginPage extends StatelessWidget {
               ],
             )
 
-            
+
 
            
             

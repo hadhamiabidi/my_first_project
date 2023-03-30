@@ -4,14 +4,13 @@ import 'package:pfe/views/login_page.dart';
 import 'package:pfe/views/onboarding_page.dart';
 import 'package:pfe/views/signup_page.dart';
 void main() {
-  runApp(const GetMaterialApp( home: LoginPage(),));
+  runApp(GetMaterialApp( home: LoginPage(),));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context)  {
     return GetMaterialApp(
-
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

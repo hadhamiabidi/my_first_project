@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pfe/controllers/signup_controller.dart';
 
 class SignupPage extends StatelessWidget{
-  const SignupPage({ Key? key}) : super(key: key);
+  final _controller = RegisterController();
+  SignupPage({ Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
