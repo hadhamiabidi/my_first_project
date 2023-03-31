@@ -12,17 +12,17 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff154C79),
+      backgroundColor: const  Color(0xff154C79),
       body: SafeArea(
         child: SingleChildScrollView(child: Padding(padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(alignment: Alignment.center,
-              child: Image.asset('assets/login1.png',
+              child: Image.asset('assets/logo.jpg',
               fit: BoxFit.cover,
               height: 230,
-              width: 180,)
+              width: 250,)
             ),
             const SizedBox(
               height: 40,
@@ -31,7 +31,7 @@ class LoginPage extends StatelessWidget {
             const Text(
                 'Username',
                 style: TextStyle(fontSize: 20,
-                    color: Colors.white)),
+                    color: Colors.black)),
             const SizedBox(
               height: 25,
             ),
@@ -48,7 +48,7 @@ class LoginPage extends StatelessWidget {
             const Text(
                 'Password',
                 style: TextStyle(fontSize: 20,
-                    color: Colors.white)),
+                    color: Colors.black)),
             const SizedBox(
               height: 25,
             ),
@@ -93,7 +93,7 @@ class LoginPage extends StatelessWidget {
               children:  [
                const Text(
                   'Dont have an account?',
-                  style: TextStyle(fontSize: 15, color: Colors.white),
+                  style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
                 InkWell(
                   onTap: (){
@@ -101,7 +101,7 @@ class LoginPage extends StatelessWidget {
                   },
                   child: const Text(
                     'Signup',
-                    style: TextStyle(fontSize: 15, color: Colors.blue),
+                    style: TextStyle(fontSize: 15, color: Colors.purple),
 
 
                   ),
