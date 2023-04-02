@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
 
-class DashboardPgae extends GetxController {
+class DashboardController extends GetxController {
 
 }
