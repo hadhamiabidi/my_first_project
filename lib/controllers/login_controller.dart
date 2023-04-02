@@ -1,8 +1,7 @@
 
 import 'package:get/get.dart';
+import 'package:pfe/controllers/dashboard_controller.dart';
 import 'package:pfe/views/signup_page.dart';
-
-import '../views/dashboard_page.dart';
 
 class LoginController extends GetxController {
 
@@ -11,6 +10,7 @@ class LoginController extends GetxController {
   }
 
   goToDashboard(){
-    Get.to(DashboardPage());
+
+    Get.to(DashboardPgae());
   }
 }

@@ -5,6 +5,7 @@ import 'package:get/utils.dart';
 import 'package:pfe/views/login_page.dart';
 
 import '../models/onboarding_info.dart';
+import 'dashboard_controller.dart';
 
 class OnboardingController extends GetxController {
   var selectedPageIndex = 0.obs;
@@ -15,6 +16,7 @@ class OnboardingController extends GetxController {
     if (isLastPage) {
       //go to home page  utiliser getX pour naviguer de ecran a un autre
      Get.to(LoginPage());
+
 
     } else
       pageController.nextPage(duration: 300.milliseconds, curve: Curves.ease);
