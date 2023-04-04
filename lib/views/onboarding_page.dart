@@ -23,10 +23,10 @@ class OnboardingPage extends StatelessWidget {
                       children: [
                         Image.asset(
                             _controller.onboardingPages[index].ImageAsset),
-                        SizedBox(height: 32),
+                        const SizedBox(height: 32),
                         Text(
                           _controller.onboardingPages[index].title,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.w500),
                         ),
                         SizedBox(height: 32),

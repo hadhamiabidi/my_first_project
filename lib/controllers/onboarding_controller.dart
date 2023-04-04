@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
-import 'package:pfe/views/login_page.dart';
-
 import '../models/onboarding_info.dart';
-import 'dashboard_controller.dart';
+import '../views/login_page.dart';
 
 class OnboardingController extends GetxController {
   var selectedPageIndex = 0.obs;
@@ -18,8 +16,9 @@ class OnboardingController extends GetxController {
      Get.to(LoginPage());
 
 
-    } else
+    } else {
       pageController.nextPage(duration: 300.milliseconds, curve: Curves.ease);
+    }
   }
   List<OnboardingInfo> onboardingPages = [
     OnboardingInfo('assets/order.jpg', 'Place Your Order', 'Now you can order any time right from your mobile.'),
