@@ -53,6 +53,7 @@ class LoginPage extends StatelessWidget {
               filled: true,
               prefixIcon: const Icon(Icons.person)),
         ),
+
         const SizedBox(height: 10),
         TextField(
           controller: controller.passwordField,
