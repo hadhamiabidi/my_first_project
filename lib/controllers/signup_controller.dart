@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class RegisterController extends GetxController {
-  late TextEditingController nomField,prenomField,passwordField,EmailField,numField,confirmField;
+  late TextEditingController nomField,prenomField,passwordField,emailField,numField,confirmField;
 
   @override
   void onInit() {
@@ -10,8 +10,10 @@ class RegisterController extends GetxController {
     nomField = TextEditingController();
     prenomField = TextEditingController();
     passwordField = TextEditingController();
-    EmailField = TextEditingController();
+    emailField = TextEditingController();
     numField = TextEditingController();
     confirmField = TextEditingController();
   }
+
+  void handeSignUp(BuildContext context) {}
 }

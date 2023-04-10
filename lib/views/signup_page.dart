@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:pfe/controllers/signup_controller.dart';
 
 import '../config/app_styles.dart';
+import '../widgets/build_text_field.dart';
+import '../widgets/submit_button.dart';
 
-class SignupPage extends StatelessWidget{
-  final _controller = RegisterController();
-  RegisterController controller = Get.put(RegisterController());
-  SignupPage({ Key? key}) : super(key: key);
+class SignupPage extends StatelessWidget {
+  final controller = Get.put(RegisterController());
+
+  SignupPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -18,115 +20,62 @@ class SignupPage extends StatelessWidget{
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _header(context),
-              _inputField(context),
-
+              Column(
+                children: [
+                  Text(
+                    "S'inscrire",
+                    style: AppStyles.neutralBlack20W6Style,
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  buildTextField(
+                    hintText: "Nom",
+                    prefixIcon: Icons.person,
+                    controller: controller.nomField,
+                  ),
+                  const SizedBox(height: 10),
+                  buildTextField(
+                    hintText: "Prénom",
+                    prefixIcon: Icons.person,
+                    controller: controller.prenomField,
+                  ),
+                  const SizedBox(height: 10),
+                  buildTextField(
+                    hintText: "E-mail",
+                    prefixIcon: Icons.contact_mail,
+                    controller: controller.emailField,
+                  ),
+                  const SizedBox(height: 10),
+                  buildTextField(
+                    hintText: "Contact",
+                    prefixIcon: Icons.contact_phone_outlined,
+                    controller: controller.numField,
+                  ),
+                  const SizedBox(height: 10),
+                  buildTextField(
+                    hintText: "Mot de passe",
+                    prefixIcon: Icons.lock,
+                    controller: controller.passwordField,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 10),
+                  buildTextField(
+                    hintText: "Confirmer mot de passe",
+                    prefixIcon: Icons.lock,
+                    controller: controller.confirmField,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 10),
+                  SubmitButton(label: "Enregistrer", onPressed: () {controller.handeSignUp(context);})
+                ],
+              ),
             ],
           ),
         ),
       ),
     );
   }
-    _header(context) {
-      return Column(
-        children: [
-          Text("S inscrire", style: AppStyles.neutralBlack20W6Style,),
-          const SizedBox(height: 10,)
-        ],
-      );
-    }
-    _inputField(context) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-        TextField(
-        controller: controller.nomField,
-        decoration: InputDecoration(
-            hintText: "nom",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide.none),
-            fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            filled: true,
-            prefixIcon: const Icon(Icons.person)),
-      ),
-
-
-        const SizedBox(height: 10),
-      TextField(
-      controller: controller.prenomField,
-      decoration: InputDecoration(
-          hintText: "prenom",
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide.none),
-          fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-          filled: true,
-          prefixIcon: const Icon(Icons.person)),
-      obscureText: true,
-      ),
-      const SizedBox(height: 10),
-
-      TextField(
-      controller: controller.EmailField,
-      decoration: InputDecoration(
-      hintText: "E-mail",
-      border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none),
-      fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-      filled: true,
-      prefixIcon: const Icon(Icons.contact_mail)),
-      obscureText: true,
-      ),
-      const SizedBox(height: 10),
-
-
-      TextField(
-      controller: controller.numField,
-      decoration: InputDecoration(
-      hintText: "Contact",
-      border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none),
-      fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-      filled: true,
-      prefixIcon: const Icon(Icons.contact_phone_outlined)),
-      obscureText: true,
-      ),
-      const SizedBox(height: 10),
-
-      TextField(
-      controller: controller.passwordField,
-      decoration: InputDecoration(
-      hintText: "mot de passe",
-      border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none),
-      fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-      filled: true,
-      prefixIcon: const Icon(Icons.contact_mail)),
-      obscureText: true,
-      ),
-      const SizedBox(height: 10),
-
-      TextField(
-      controller: controller.confirmField,
-      decoration: InputDecoration(
-      hintText: " Confirmer mot de passe",
-      border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none),
-      fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-      filled: true,
-      prefixIcon: const Icon(Icons.contact_mail)),
-      obscureText: true,
-      ),
-      const SizedBox(height: 10),
-      );
-  ],
-  }
 }
-
-
-

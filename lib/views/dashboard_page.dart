@@ -43,10 +43,10 @@ class DashboardPage extends StatelessWidget {
               child: GridView.count(
                   crossAxisCount: 2,
                 children: <Widget> [
-                  MyMenu(title: "Visualization of the list of orders",icon: Icons.list, warna: Colors.brown, onPressed: () {  },),
+                  MyMenu(title: "Visualization of the list of orders",icon: Icons.list, warna: Colors.brown, onPressed: () { _controller.goToPage(1); },),
                   MyMenu(title: "Visualization of statistics",icon: Icons.stacked_line_chart, warna: Colors.red, onPressed: () {  },),
                   MyMenu(title: "Real-time order status tracking",icon: Icons.search, warna: Colors.pink, onPressed: () {  },),
-                  MyMenu(title: "Claim",icon: Icons.not_interested_outlined, warna: Colors.blue, onPressed: () {  },),
+                  MyMenu(title: "Claim",icon: Icons.not_interested_outlined, warna: Colors.blue, onPressed: () {  _controller.goToPage(4); },),
                   MyMenu(title: "Chat with delivery man",icon: Icons.chat, warna: Colors.grey, onPressed: () {  },),
                   MyMenu(title: "Delivery manager contact",icon: Icons.contact_phone_outlined, warna: Colors.green, onPressed: () {  },),
 
