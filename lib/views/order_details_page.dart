@@ -11,7 +11,7 @@ class OrderDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(title: 'Order Details', showBackButton: true),
+      appBar: const MyAppBar(title: 'Détails de la commande', showBackButton: true),
       body: Column(
         children: [
           Container(
@@ -25,10 +25,9 @@ class OrderDetailsPage extends StatelessWidget {
               polylines: orderDetailsController.getPolylines(),
             ),
           ),
-          SizedBox(
-            height: 120,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -56,42 +55,34 @@ class OrderDetailsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Order Details',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    orderDetailsController
-                        .getOrder()
-                        .status,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Total Price: \$${orderDetailsController.getOrder().price}',
+                    'Prix ​​total: \$${orderDetailsController.getOrder().price}',
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Status: ${orderDetailsController.isCancelled() ? "Cancelled" : "In Progress"}',
-                        style: TextStyle(
-                          color: orderDetailsController.isCancelled()
-                              ? Colors.red
-                              : Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (!orderDetailsController.isCancelled())
-                        ElevatedButton(
-                          onPressed: orderDetailsController.cancelOrder,
-                          child: Text('Cancel Order'),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.red,
+                  SizedBox(
+                    height: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Statut: ${orderDetailsController.isCancelled() ? "Annulé" : "En cours"}',
+                          style: TextStyle(
+                            color: orderDetailsController.isCancelled()
+                                ? Colors.red
+                                : Colors.green,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                    ],
+                        if (!orderDetailsController.isCancelled())
+                          ElevatedButton(
+                            onPressed: orderDetailsController.cancelOrder,
+                            child: Text('Annuler la commande'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.red,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ],
               ),
