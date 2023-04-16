@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pfe/routes/app_routes.dart';
 
 import '../models/order_model.dart';
 
@@ -21,5 +22,9 @@ class OrdersController extends GetxController {
     ),
     // add more delivery items here...
   ].obs;
+
+  void goToAddOrder() {
+    Get.toNamed(AppRoutes.addOrder);
+  }
 
 }
