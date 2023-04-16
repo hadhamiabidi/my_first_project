@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../views/dashboard_page.dart';
+
 class RegisterController extends GetxController {
   late TextEditingController nomField,prenomField,passwordField,emailField,numField,confirmField;
 
@@ -15,5 +17,7 @@ class RegisterController extends GetxController {
     confirmField = TextEditingController();
   }
 
-  void handeSignUp(BuildContext context) {}
+  void handeSignUp(BuildContext context) {
+
+  }
 }
