@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({Key? key})  : super(key: key);
+class AllOrdersPage extends StatelessWidget {
+  const AllOrdersPage({Key? key})  : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class ChatPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Text(
-                "Chat",
+                "All Orders",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 30,

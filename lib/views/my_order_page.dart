@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:iconly/iconly.dart';
 
-class MyOrder  extends StatelessWidget {
-  const MyOrder ({super.key});
+class MyOrderPage extends StatelessWidget {
+  const MyOrderPage({Key? key})  : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "My Order",
-          style: Theme.of(context).textTheme.headline1,
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: size.height,
+        decoration: BoxDecoration(color: Colors.white),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                "My Order",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+
+                ),
+              ),
+            ],
+          ),
+
         ),
-        const Icon(
-          IconlyLight.home,
-          size: 40,
-        ),
-      ],
+      ),
     );
   }
+
+
 }
