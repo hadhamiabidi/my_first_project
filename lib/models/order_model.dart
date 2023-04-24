@@ -6,10 +6,12 @@ class Order {
   final double price;
 
   Order({
+
     required this.title,
     required this.startAddress,
     required this.destinationAddress,
     required this.status,
-    required this.price
+    required this.price,
   });
 }
+

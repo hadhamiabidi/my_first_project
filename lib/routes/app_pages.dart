@@ -2,16 +2,19 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:pfe/bindings/bottom_navigation_binding.dart';
 import 'package:pfe/bindings/claim_binding.dart';
 import 'package:pfe/bindings/login_binding.dart';
+import 'package:pfe/bindings/my_order_binding.dart';
 import 'package:pfe/bindings/onboarding_binding.dart';
 import 'package:pfe/bindings/order_details_binding.dart';
 import 'package:pfe/bindings/orders_binding.dart';
-import 'package:pfe/controllers/bottom_navigation_controller.dart';
 import 'package:pfe/views/claim_page.dart';
 import 'package:pfe/views/dashboard_page.dart';
 import 'package:pfe/views/login_page.dart';
+import 'package:pfe/views/my_order_page.dart';
 import 'package:pfe/views/order_details_page.dart';
 import 'package:pfe/views/orders_page.dart';
 import '../bindings/dashboard_binding.dart';
+import '../controllers/all_orders_controller.dart';
+import '../views/all_orders_page.dart';
 import '../views/navigation_bar_page.dart';
 import '../views/onboarding_page.dart';
 import 'app_routes.dart';
@@ -52,6 +55,16 @@ class AppPages {
       name: AppRoutes.bottomNavigation,
       page: () =>  NavigationPage(),
       binding: BottomNavigation(),
+    ),
+    GetPage(
+      name: AppRoutes.allOrders,
+      page: () =>  AllOrdersPage(),
+      binding: OrdersBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.myOrder,
+      page: () =>  MyOrderPage(),
+      binding: MyOrderBinding(),
     ),
   ];
 }

@@ -6,5 +6,7 @@ class AppRoutes {
   static const claims = '/claims';
   static const order = '/order-details';
   static const bottomNavigation = '/bottom-navigation';
+  static const allOrders = '/all_orders';
+  static const myOrder = '/my-order';
 
 }
