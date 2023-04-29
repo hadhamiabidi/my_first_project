@@ -6,6 +6,8 @@ import 'package:pfe/views/chat_page.dart';
 import 'package:pfe/views/my_order_page.dart';
 import 'package:pfe/views/profile_page.dart';
 
+
+import '../bindings/profile_binding.dart';
 import '../controllers/bottom_navigation_controller.dart';
 
 

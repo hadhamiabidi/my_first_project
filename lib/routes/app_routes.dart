@@ -8,5 +8,6 @@ class AppRoutes {
   static const bottomNavigation = '/bottom-navigation';
   static const allOrders = '/all_orders';
   static const myOrder = '/my-order';
+  static const profile = '/profile';
 
 }

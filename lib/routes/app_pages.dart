@@ -12,7 +12,9 @@ import 'package:pfe/views/login_page.dart';
 import 'package:pfe/views/my_order_page.dart';
 import 'package:pfe/views/order_details_page.dart';
 import 'package:pfe/views/orders_page.dart';
+import 'package:pfe/views/profile_page.dart';
 import '../bindings/dashboard_binding.dart';
+import '../bindings/profile_binding.dart';
 import '../controllers/all_orders_controller.dart';
 import '../views/all_orders_page.dart';
 import '../views/navigation_bar_page.dart';
@@ -65,6 +67,11 @@ class AppPages {
       name: AppRoutes.myOrder,
       page: () =>  MyOrderPage(),
       binding: MyOrderBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () =>  ProfilePage(),
+      binding: Profile(),
     ),
   ];
 }
