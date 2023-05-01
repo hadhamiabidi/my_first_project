@@ -25,7 +25,7 @@ class LoginController extends GetxController {
 
 
   void handeSignIn(context) {
-    Get.to(NavigationPage());
+    Get.to(DashboardPage());
   }
 
   void goToForgotPassword() {}

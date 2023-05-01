@@ -32,7 +32,7 @@ class OrdersPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your add button action here
+          deliveryController.goToAddOrder();
         },
         child: const Icon(Icons.add),
       ),
