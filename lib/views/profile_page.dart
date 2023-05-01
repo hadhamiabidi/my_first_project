@@ -1,16 +1,6 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
-
-
-
-
-class ProfilePage extends StatefulWidget{
-  _ProfileState createState() => _ProfileState();
-}
-class _ProfileState extends State<ProfilePage> {
+class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +8,7 @@ class _ProfileState extends State<ProfilePage> {
         child: Column(
           children: [
             _getHeader(),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             _profileName(context,"Sami"),
             SizedBox(
               height: 14,
@@ -42,6 +32,7 @@ class _ProfileState extends State<ProfilePage> {
     );
   }
 }
+
 Widget _getHeader() {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -64,8 +55,8 @@ Widget _getHeader() {
       )
     ],
   );
-
 }
+
 Widget _profileName(BuildContext context, String name) {
   return Container(
     width: MediaQuery.of(context).size.width * 0.80,
@@ -123,6 +114,7 @@ Widget _detailsCard(){
     ),
   );
 }
+
 Widget _settingsCard() {
   return Padding(
     padding: const EdgeInsets.all(8.0),
