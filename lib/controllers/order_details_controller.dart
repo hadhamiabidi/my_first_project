@@ -1,65 +1,70 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pfe/config/Utils.dart';
+import 'package:pfe/config/base_controller.dart';
 import 'package:pfe/models/order_model.dart';
+import 'package:pfe/routes/app_routes.dart';
 
-class OrderDetailsController extends GetxController {
+class OrderDetailsController extends GetxController with BaseController {
   late GoogleMapController mapController;
-  late Order _order;
+  late OrderModel _order;
 
   @override
   void onInit() {
     super.onInit();
-    _order = Order(
-        title: 'Delivery 1',
-        startAddress: '123 Main St',
-        destinationAddress: '456 Elm St',
-        status: 'Pending',
-        price: 123
-    );
+    _order = Get.arguments as OrderModel;
   }
+
 
   GoogleMapController getMapController() => mapController;
 
-  CameraPosition getInitialCameraPosition() => CameraPosition(
-    target: const LatLng(37.4219999, -122.0840575),
+  CameraPosition getInitialCameraPosition() =>  CameraPosition(
+    target: Utils.parseLatLng(_order.start_location),
     zoom: 10,
   );
 
   Set<Marker> getMarkers() => {
-    const Marker(
-      markerId: MarkerId('start'),
-      position: LatLng(37.4219999, -122.0840575),
+     Marker(
+      markerId: const  MarkerId('Lieu de départ'),
+      position: Utils.parseLatLng(_order.start_location),
       icon: BitmapDescriptor.defaultMarker,
     ),
     Marker(
-      markerId: const MarkerId('destination'),
-      position: const LatLng(37.42796133580664, -122.085749655962),
+      markerId: const MarkerId('Lieu de destination'),
+      position:  Utils.parseLatLng(_order.destination_location),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
     ),
   };
 
   Set<Polyline> getPolylines() => {
-    const Polyline(
-      polylineId: PolylineId('route'),
+     Polyline(
+      polylineId: const PolylineId('route'),
       points: [
-        LatLng(37.4219999, -122.0840575),
-        LatLng(37.42796133580664, -122.085749655962),
+        Utils.parseLatLng(_order.start_location),
+        Utils.parseLatLng(_order.destination_location),
       ],
       color: Colors.blue,
       width: 4,
     ),
   };
 
-  String getStartAddress() => '123 Main St, San Francisco, CA';
-
-  String getDestinationAddress() => '456 Elm St, Mountain View, CA';
-
-  Order getOrder() => _order;
+  OrderModel getOrder() => _order;
 
   bool isCancelled() => false;
 
-  void cancelOrder() {
-    // Implement cancel order logic
+  void cancelOrder() async {
+    showLoading();
+    // Update the status attribute of the order to -1 in Firestore
+    await FirebaseFirestore.instance
+        .collection('orders')
+        .doc(_order.uid)
+        .update({'status': -1});
+    hideLoading();
+    // Display a success message to the user
+    Get.snackbar('Order Canceled', 'The order has been canceled.');
+    Get.offAllNamed(AppRoutes.dashboard);
   }
+
 }

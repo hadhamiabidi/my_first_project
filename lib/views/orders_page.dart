@@ -5,34 +5,34 @@ import '../widgets/custum_app_bar.dart';
 import '../widgets/delivery_item.dart';
 
 class OrdersPage extends StatelessWidget {
-  final OrdersController deliveryController = Get.put(OrdersController());
+  const OrdersPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final OrdersController controller = Get.put(OrdersController());
+
     return Scaffold(
       appBar: const MyAppBar(
-        title:  'Liste de commandes',
+        title: 'Liste de commandes',
         showBackButton: true,
       ),
       body: Obx(
-            () => ListView.builder(
-          itemCount: deliveryController.deliveryItems.length,
+        () => ListView.builder(
+          itemCount: controller.deliveryItems.length,
           itemBuilder: (BuildContext context, int index) {
-                final item = deliveryController.deliveryItems[index];
-                return GestureDetector(
-                  onTap: () {
-                    // Add your click action here, for example:
-                    Get.toNamed('/order-details', arguments: item);
-                  },
-                  child: OrderItemWidget(item: item),
-                );
+            final item = controller.deliveryItems[index];
+            return GestureDetector(
+              onTap: () {
+                controller.goToOrderDetails(item);
               },
-
-            ),
+              child: OrderItemWidget(item: item),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          deliveryController.goToAddOrder();
+          controller.goToAddOrder();
         },
         child: const Icon(Icons.add),
       ),

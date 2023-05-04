@@ -7,10 +7,13 @@ import '../widgets/custum_app_bar.dart';
 
 
 class ClaimsPage extends StatelessWidget {
-  final ClaimsController claimController = Get.put(ClaimsController());
+  const ClaimsPage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
+    final ClaimsController claimController = Get.put(ClaimsController());
+
     return Scaffold(
       appBar: const MyAppBar(
         title: 'Liste de réclamations',

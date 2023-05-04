@@ -1,8 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pfe/config/base_controller.dart';
 
-class AddOrderController extends GetxController {
+import '../routes/app_routes.dart';
+
+class AddOrderController extends GetxController with BaseController {
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -12,7 +17,84 @@ class AddOrderController extends GetxController {
   TextEditingController();
   final TextEditingController deliveryDateController = TextEditingController();
 
-  addOrder() {}
+  void addOrder() {
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
+    final price = priceController.text.trim();
+    final startLocation = startLocationController.text.trim();
+    final destinationLocation = destinationLocationController.text.trim();
+    final deliveryDate = deliveryDateController.text.trim();
+
+    // Validate title
+    if (title.isEmpty) {
+      Get.snackbar("Error", "Please enter a title");
+      return;
+    }
+
+    // Validate description
+    if (description.isEmpty) {
+      Get.snackbar("Error", "Please enter a description");
+      return;
+    }
+
+    // Validate price
+    if (price.isEmpty) {
+      Get.snackbar("Error", "Please enter a price");
+      return;
+    }
+    if (double.tryParse(price) == null) {
+      Get.snackbar("Error", "Please enter a valid price");
+      return;
+    }
+
+    // Validate start location
+    if (startLocation.isEmpty) {
+      Get.snackbar("Error", "Please enter a start location");
+      return;
+    }
+
+    // Validate destination location
+    if (destinationLocation.isEmpty) {
+      Get.snackbar("Error", "Please enter a destination location");
+      return;
+    }
+
+    // Validate delivery date
+    if (deliveryDate.isEmpty) {
+      Get.snackbar("Error", "Please enter a delivery date");
+      return;
+    }
+    if (DateTime.tryParse(deliveryDate) == null) {
+      Get.snackbar("Error", "Please enter a valid delivery date (yyyy-mm-dd)");
+      return;
+    }
+
+    // Add order to Firestore
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      Get.snackbar("Error", "No user signed in");
+      return;
+    }
+    showLoading();
+    FirebaseFirestore.instance.collection('orders').add({
+      'title': title,
+      'description': description,
+      'price': double.parse(price),
+      'start_location': startLocation,
+      'destination_location': destinationLocation,
+      'delivery_date': DateTime.parse(deliveryDate),
+      'user_id': currentUser.uid,
+      'status':0
+    }).then((value) {
+      hideLoading();
+      Get.offAllNamed(AppRoutes.dashboard);
+      Get.snackbar("Success", "Order added successfully");
+    }).catchError((error) {
+      hideLoading();
+      Get.snackbar("Error", "Failed to add order: $error");
+    });
+  }
+
 
   selectDeliveryDate() async {
     DateTime? selectedDate = await showDatePicker(

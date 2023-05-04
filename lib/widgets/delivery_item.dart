@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pfe/models/order_model.dart';
 
-class OrderItemWidget extends StatelessWidget {
-  final Order item;
 
-  const OrderItemWidget({Key? key, required this.item}) : super(key: key);
+import '../config/Utils.dart';
+
+class OrderItemWidget extends StatelessWidget {
+  final OrderModel item;
+
+  const OrderItemWidget({
+    Key? key,
+    required this.item,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final startLocation = Utils.parseLatLng(item.start_location);
+    final destinationLocation = Utils.parseLatLng(item.destination_location);
+
     return Container(
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -28,54 +38,88 @@ class OrderItemWidget extends StatelessWidget {
         children: [
           Text(
             item.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.grey,
-                radius: 8,
-              ),
-              SizedBox(width: 16),
-              Text(item.startAddress),
-            ],
+          const SizedBox(height: 16),
+          _buildLocationRow(
+            startLocation,
+            'Lieu de départ',
+            Icons.location_on_outlined,
           ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.grey,
-                radius: 8,
-              ),
-              SizedBox(width: 16),
-              Text(item.destinationAddress),
-            ],
+          const SizedBox(height: 8),
+          _buildLocationRow(
+            destinationLocation,
+            'Lieu de destination',
+            Icons.location_on,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: item.status == 'Delivered'
+              color: item.status == 1
                   ? Colors.green.withOpacity(0.2)
                   : Colors.orange.withOpacity(0.2),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              item.status,
+              item.status == 0 ? 'En attendant': item.status == -1 ? "Annulé" : 'Accepté',
               style: TextStyle(
-                color: item.status == 'Delivered'
-                    ? Colors.green
-                    : Colors.orange,
+                color: item.status == 1 ? Colors.green : item.status == -1? Colors.red : Colors.orange,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLocationRow(
+      LatLng location,
+      String title,
+      IconData icon,
+      ) {
+    return Row(
+      children: [
+        const CircleAvatar(
+          backgroundColor: Colors.grey,
+          radius: 8,
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: FutureBuilder<String>(
+            future: Utils.getAddressFromLatLng(location),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      snapshot.data!,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return const Text('Échec de la récupération de l\'adresse');
+              } else {
+                return const Text('Chargement...');
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 }

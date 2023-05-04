@@ -5,16 +5,16 @@ import '../config/app_styles.dart';
 import '../controllers/login_controller.dart';
 import '../widgets/submit_button.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginController controller = Get.put(LoginController());
-  LoginPage({Key? key}) : super(key: key);
+class SigninPage extends StatelessWidget {
+  SigninController controller = Get.put(SigninController());
+  SigninPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          margin: EdgeInsets.all(24),
+          margin: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -69,7 +69,7 @@ class LoginPage extends StatelessWidget {
           obscureText: true,
         ),
         const SizedBox(height: 10),
-        SubmitButton(label: "Connexion", onPressed: () {controller.handeSignIn(context);})
+        SubmitButton(label: "Connexion", onPressed: () {controller.handeSignIn();})
       ],
     );
   }

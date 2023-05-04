@@ -12,6 +12,7 @@ class AppRoutes {
   static const addOrder = '/add-order';
   static const conversations = '/conversations';
   static const chat = '/chat';
-
+  static const register = '/register';
+  static const forgetPassword = '/forget-password';
 
 }

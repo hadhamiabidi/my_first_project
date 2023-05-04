@@ -13,7 +13,7 @@ class OnboardingController extends GetxController {
   forwardAction() {
     if (isLastPage) {
       //go to home page  utiliser getX pour naviguer de ecran a un autre
-     Get.to(LoginPage());
+     Get.to(SigninPage());
 
 
     } else {

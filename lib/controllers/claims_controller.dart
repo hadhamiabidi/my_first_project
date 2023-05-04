@@ -1,24 +1,34 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:pfe/config/base_controller.dart';
 
 import '../models/claim_model.dart';
 
-class ClaimsController extends GetxController {
-  final List<Claim> claims = [
-    Claim(
-      title: 'Claim 1',
-      description: 'Description for Claim 1',
-      date: '2022-01-01',
-    ),
-    Claim(
-      title: 'Claim 2',
-      description: 'Description for Claim 2',
-      date: '2022-02-01',
-    ),
-    Claim(
-      title: 'Claim 3',
-      description: 'Description for Claim 3',
-      date: '2022-03-01',
-    ),
-  ].obs;
+class ClaimsController extends GetxController with BaseController {
+  final RxList<Claim> claims = <Claim>[].obs;
 
+  @override
+  void onReady() {
+    super.onReady();
+    fetchClaims();
+  }
+
+  Future<void> fetchClaims() async {
+    showLoading();
+    final claimsCollection = FirebaseFirestore.instance.collection('claims');
+    final querySnapshot = await claimsCollection.get();
+
+    final newClaims = <Claim>[];
+    for (final doc in querySnapshot.docs) {
+      final data = doc.data();
+      final claim = Claim.fromJson({
+        'uid': doc.id,
+        ...data,
+      });
+      newClaims.add(claim);
+    }
+
+    claims.addAll(newClaims);
+    hideLoading();
+  }
 }

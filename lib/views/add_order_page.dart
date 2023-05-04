@@ -6,10 +6,13 @@ import '../widgets/custum_app_bar.dart';
 import '../widgets/custum_text_field.dart';
 
 class AddOrderScreen extends StatelessWidget {
-  final AddOrderController _controller = Get.put(AddOrderController());
+
+  const AddOrderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AddOrderController controller = Get.put(AddOrderController());
+
     return Scaffold(
       appBar: const MyAppBar(title: 'Add Order', showBackButton: true),
       body: Padding(
@@ -21,49 +24,49 @@ class AddOrderScreen extends StatelessWidget {
               CustomTextField(
                 label: 'Titre',
                 hint: 'Entrez le titre',
-                controller: _controller.titleController,
+                controller: controller.titleController,
               ),
               CustomTextField(
                 label: 'Description',
                 hint: 'Entrez la description',
-                controller: _controller.descriptionController,
+                controller: controller.descriptionController,
                 maxLines: 5,
               ),
               CustomTextField(
                 label: 'Prix',
                 hint: 'Entrez le prix',
-                controller: _controller.descriptionController,
+                controller: controller.priceController,
               ),
               CustomTextField(
                 label: 'La date de livraison',
                 hint: 'Entrez la date de livraison',
-                controller: _controller.deliveryDateController,
+                controller: controller.deliveryDateController,
                 readOnly: true,
                 onTap:()=>{
-                  _controller.selectDeliveryDate()
+                  controller.selectDeliveryDate()
                 },
               ),
               CustomTextField(
                 label: 'Adresse de ramassage',
                 hint: "Entrez l'adresse de ramassage",
-                controller: _controller.startLocationController,
+                controller: controller.startLocationController,
                 readOnly: true,
                 onTap:()=>{
-                  _controller.selectLocationAddress(_controller.startLocationController)
+                  controller.selectLocationAddress(controller.startLocationController)
                 },
               ),
               CustomTextField(
                 label: 'Adresse de destination',
                 hint: "Entrez l'adresse de destination",
-                controller: _controller.destinationLocationController,
+                controller: controller.destinationLocationController,
                 readOnly: true,
                 onTap:()=>{
-                  _controller.selectLocationAddress(_controller.destinationLocationController)
+                  controller.selectLocationAddress(controller.destinationLocationController)
                 },
               ),
               SubmitButton(
                 label: 'Ajouter une commande',
-                onPressed: () => _controller.addOrder(),
+                onPressed: () => controller.addOrder(),
               ),
             ],
           ),

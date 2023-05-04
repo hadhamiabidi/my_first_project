@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pfe/controllers/dashboard_controller.dart';
 
 import '../config/app_styles.dart';
@@ -26,15 +27,15 @@ class DashboardPage extends StatelessWidget {
                       children: [
                         Text("Welcome !!!",style:AppStyles.black18W6Style,),
                         const SizedBox(height: 8), // Add some spacing between the texts
-                        Text("Hadhami Abidi",style:AppStyles.black14W7Style,),
+                        Obx(() => Text(_controller.displayName.value,style:AppStyles.black14W7Style,)),
                       ],
                     ),
                   ),
                   SizedBox(width: 16),
-                  const CircleAvatar(
+                 /* const CircleAvatar(
                     radius: 25,
                     backgroundImage: AssetImage('images/photos.jpg'),
-                  ),// Add some spacing between the two widgets
+                  ),*/
                 ],
               ),
             ),
@@ -42,15 +43,13 @@ class DashboardPage extends StatelessWidget {
             Expanded(
               child: GridView.count(
                   crossAxisCount: 2,
-                children: <Widget> [
+                children: [
                   MyMenu(title: "Visualization of the list of orders",icon: Icons.list, warna: Colors.brown, onPressed: () { _controller.goToPage(1); },),
                   MyMenu(title: "Visualization of statistics",icon: Icons.stacked_line_chart, warna: Colors.red, onPressed: () {  },),
                   MyMenu(title: "Real-time order status tracking",icon: Icons.search, warna: Colors.pink, onPressed: () {  },),
                   MyMenu(title: "Claim",icon: Icons.not_interested_outlined, warna: Colors.blue, onPressed: () {  _controller.goToPage(4); },),
                   MyMenu(title: "Chat with delivery man",icon: Icons.chat, warna: Colors.grey, onPressed: () { _controller.goToPage(5); },),
                   MyMenu(title: "Delivery manager contact",icon: Icons.contact_phone_outlined, warna: Colors.green, onPressed: () {  },),
-
-
                 ],
               ),
             ),

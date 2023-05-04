@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../controllers/all_orders_controller.dart';
 import '../widgets/custum_app_bar.dart';
 import '../widgets/delivery_item.dart';
 
 class AllOrdersPage extends StatelessWidget {
-  final AllOrdersController deliveryController = Get.put(AllOrdersController());
+  const AllOrdersPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AllOrdersController controller = Get.put(AllOrdersController());
+
     return Scaffold(
       appBar: const MyAppBar(
-        title:  'Liste de commandes',
+        title: 'Liste de commandes',
         showBackButton: true,
       ),
       body: Obx(
-            () => ListView.builder(
-          itemCount: deliveryController.deliveryItems.length,
+        () => ListView.builder(
+          itemCount: controller.deliveryItems.length,
           itemBuilder: (BuildContext context, int index) {
-            final item = deliveryController.deliveryItems[index];
+            final item = controller.deliveryItems[index];
             return GestureDetector(
               onTap: () {
                 // Add your click action here, for example:
@@ -27,14 +30,7 @@ class AllOrdersPage extends StatelessWidget {
               child: OrderItemWidget(item: item),
             );
           },
-
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your add button action here
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }

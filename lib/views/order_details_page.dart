@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../config/Utils.dart';
 import '../controllers/order_details_controller.dart';
 import '../widgets/custum_app_bar.dart';
 
 class OrderDetailsPage extends StatelessWidget {
-  final OrderDetailsController orderDetailsController =
-  Get.put(OrderDetailsController());
+
+  const OrderDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final OrderDetailsController orderDetailsController =
+    Get.put(OrderDetailsController());
     return Scaffold(
       appBar: const MyAppBar(title: 'Détails de la commande', showBackButton: true),
       body: Column(
@@ -39,7 +43,36 @@ class OrderDetailsPage extends StatelessWidget {
                         radius: 10,
                       ),
                       const SizedBox(width: 8),
-                      Text(orderDetailsController.getStartAddress()),
+                      Expanded(
+                        child: FutureBuilder<String>(
+                          future: Utils.getAddressFromLatLng(Utils.parseLatLng(orderDetailsController.getOrder().start_location)),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Lieu de départ",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    snapshot.data!,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Text('Échec de la récupération de l\'adresse');
+                            } else {
+                              return const Text('Chargement...');
+                            }
+                          },
+                        ),
+                      )
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -50,7 +83,36 @@ class OrderDetailsPage extends StatelessWidget {
                         radius: 10,
                       ),
                       const SizedBox(width: 8),
-                      Text(orderDetailsController.getDestinationAddress()),
+                      Expanded(
+                        child: FutureBuilder<String>(
+                          future: Utils.getAddressFromLatLng(Utils.parseLatLng(orderDetailsController.getOrder().destination_location)),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Lieu de destination",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    snapshot.data!,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Text('Échec de la récupération de l\'adresse');
+                            } else {
+                              return const Text('Chargement...');
+                            }
+                          },
+                        ),
+                      )
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -65,7 +127,7 @@ class OrderDetailsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Statut: ${orderDetailsController.isCancelled() ? "Annulé" : "En cours"}',
+                          'Statut: ${orderDetailsController.getOrder().status == 0 ? "En attendant" : orderDetailsController.getOrder().status == -1 ? "Annulé" : "En cours"}',
                           style: TextStyle(
                             color: orderDetailsController.isCancelled()
                                 ? Colors.red
@@ -73,7 +135,7 @@ class OrderDetailsPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        if (!orderDetailsController.isCancelled())
+                        if (orderDetailsController.getOrder().status!=-1)
                           ElevatedButton(
                             onPressed: orderDetailsController.cancelOrder,
                             child: Text('Annuler la commande'),
