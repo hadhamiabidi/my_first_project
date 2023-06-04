@@ -127,7 +127,7 @@ class OrderDetailsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Statut: ${orderDetailsController.getOrder().status == 0 ? "En attendant" : orderDetailsController.getOrder().status == -1 ? "Annulé" : "En cours"}',
+                          'Statut: ${orderDetailsController.getOrder().status == 0 ? "En attendant" : orderDetailsController.getOrder().status == -1 ? "Annulé" : orderDetailsController.getOrder().status == 1 ? "Accepté" : orderDetailsController.getOrder().status == 2 ? "Livré" : "En cours"}',
                           style: TextStyle(
                             color: orderDetailsController.isCancelled()
                                 ? Colors.red
@@ -135,7 +135,7 @@ class OrderDetailsPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        if (orderDetailsController.getOrder().status!=-1)
+                        if (orderDetailsController.isDriver==false && orderDetailsController.getOrder().status==0)
                           ElevatedButton(
                             onPressed: orderDetailsController.cancelOrder,
                             child: Text('Annuler la commande'),
@@ -143,10 +143,50 @@ class OrderDetailsPage extends StatelessWidget {
                               primary: Colors.red,
                             ),
                           ),
+                        if(orderDetailsController.isDriver==true && orderDetailsController.getOrder().status==0)
+                          ElevatedButton(
+                            onPressed: ()=>{
+                              orderDetailsController.acceptOrder()
+                            },
+                            child: Text('Accepter la commande'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.green,
+                            ),
+                          ),
+                        if(orderDetailsController.isDriver==true && orderDetailsController.getOrder().status==1)
+                          ElevatedButton(
+                            onPressed: ()=>{
+                              orderDetailsController.setDelivred()
+                            },
+                            child: Text('Livré'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.green,
+                            ),
+                          ),
+
                       ],
                     ),
+
                   ),
+                  if (!orderDetailsController.isDriver && orderDetailsController.getOrder().status != 0)
+                    TextButton.icon(
+                      onPressed: () {
+                        // Add your functionality here
+                        orderDetailsController.goToConversation(orderDetailsController.getOrder().driver_id);
+                      },
+                      icon: Icon(Icons.chat),
+                      label: Text('Contacter le livreur'),
+                      style: TextButton.styleFrom(
+                        primary: Colors.green,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          side: BorderSide(color: Colors.green),
+                        ),
+                      ),
+                    ),
                 ],
+
               ),
             ),
           ),
@@ -155,3 +195,5 @@ class OrderDetailsPage extends StatelessWidget {
     );
   }
 }
+
+

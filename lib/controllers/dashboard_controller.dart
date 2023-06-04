@@ -10,6 +10,7 @@ class DashboardController extends GetxController {
   void onInit() {
     super.onInit();
     fetchUserData();
+
   }
 
   void fetchUserData() async {

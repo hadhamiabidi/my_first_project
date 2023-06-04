@@ -5,7 +5,7 @@ class OrderModel {
 
   final String title;
   final String description;
-  final int status;
+  late final int status;
   final double price;
 
   final String user_id;

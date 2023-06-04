@@ -65,7 +65,7 @@ class OrderItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              item.status == 0 ? 'En attendant': item.status == -1 ? "Annulé" : 'Accepté',
+              item.status == 0 ? 'En attendant' : item.status == -1 ? "Annulé" : item.status == 1 ? 'Accepté' : 'Delivré',
               style: TextStyle(
                 color: item.status == 1 ? Colors.green : item.status == -1? Colors.red : Colors.orange,
                 fontWeight: FontWeight.bold,

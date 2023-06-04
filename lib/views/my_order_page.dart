@@ -6,9 +6,12 @@ import '../widgets/custum_app_bar.dart';
 import '../widgets/delivery_item.dart';
 
 class MyOrderPage extends StatelessWidget {
+  final MyOrderController controller = Get.put(MyOrderController());
+
+   MyOrderPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final MyOrderController controller = Get.put(MyOrderController());
 
     return Scaffold(
       appBar: const MyAppBar(
@@ -28,12 +31,6 @@ class MyOrderPage extends StatelessWidget {
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your add button action here
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }
