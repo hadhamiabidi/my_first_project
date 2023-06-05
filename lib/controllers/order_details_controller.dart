@@ -19,6 +19,8 @@ class OrderDetailsController extends GetxController with BaseController {
     var arguments = Get.arguments;
     isDriver = arguments['isDriver'];
     _order = arguments['item'] as OrderModel;
+    print("Moussa order");
+    print(_order.driver_uid);
   }
 
 
@@ -104,7 +106,8 @@ class OrderDetailsController extends GetxController with BaseController {
   }
 
   void goToConversation(String? driver_id) {
-    Get.toNamed(AppRoutes.chat, arguments: driver_id);
+    Get.toNamed(AppRoutes.chat, arguments: {'user_id': driver_id, 'isDriver': isDriver});
   }
+
 
 }

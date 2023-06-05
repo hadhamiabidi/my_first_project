@@ -172,7 +172,7 @@ class OrderDetailsPage extends StatelessWidget {
                     TextButton.icon(
                       onPressed: () {
                         // Add your functionality here
-                        orderDetailsController.goToConversation(orderDetailsController.getOrder().driver_id);
+                        orderDetailsController.goToConversation(orderDetailsController.getOrder().driver_uid);
                       },
                       icon: Icon(Icons.chat),
                       label: Text('Contacter le livreur'),

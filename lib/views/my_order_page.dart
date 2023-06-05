@@ -16,7 +16,6 @@ class MyOrderPage extends StatelessWidget {
     return Scaffold(
       appBar: const MyAppBar(
         title: 'Mes commandes',
-        showBackButton: true,
       ),
       body: Obx(
         () => ListView.builder(

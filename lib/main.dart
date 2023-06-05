@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:pfe/bindings/login_binding.dart';
+import 'package:pfe/bindings/onboarding_binding.dart';
 import 'package:pfe/firebase_options.dart';
 import 'package:pfe/routes/app_pages.dart';
 import 'package:pfe/views/login_page.dart';
+import 'package:pfe/views/onboarding_page.dart';
 
 
 
@@ -28,8 +30,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 
-      initialBinding:SignInBinding(),
-      home: SigninPage(),
+      initialBinding:OnBoardingBinding(),
+      home: OnboardingPage(),
       getPages: AppPages.pages,
     );
   }

@@ -1,61 +1,138 @@
-import 'package:get/get.dart';
-
-import '../models/message_model.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ChatController extends GetxController {
-  final RxList<Message> messages = <Message>[].obs;
-  late String driverId;
-  late String currentUserId;
+  var isShowEmoji = false.obs;
+  int total_unread = 0;
+  var  userId = "";
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  late FocusNode focusNode;
+  late TextEditingController chatC;
+  late ScrollController scrollC;
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamChats(String chat_id) {
+    CollectionReference chats = firestore.collection("chats");
+
+    return chats.doc(chat_id).collection("chat").orderBy("time").snapshots();
+  }
+
+  Stream<DocumentSnapshot<Object?>> streamFriendData(String friendEmail) {
+    CollectionReference users = firestore.collection("users");
+
+    return users.doc(friendEmail).snapshots();
+  }
+
+  void addEmojiToChat(Emoji emoji) {
+    chatC.text = chatC.text + emoji.emoji;
+  }
+
+  void deleteEmoji() {
+    chatC.text = chatC.text.substring(0, chatC.text.length - 2);
+  }
+
+  void newChat(String email, Map<String, dynamic> argument, String chat) async {
+    if (chat != "") {
+      CollectionReference chats = firestore.collection("chats");
+      CollectionReference users = firestore.collection("users");
+
+      String date = DateTime.now().toIso8601String();
+
+      await chats.doc(argument["chat_id"]).collection("chat").add({
+        "pengirim": email,
+        "penerima": argument["friendEmail"],
+        "msg": chat,
+        "time": date,
+        "isRead": false,
+        "groupTime": DateFormat.yMMMMd('en_US').format(DateTime.parse(date)),
+      });
+
+      Timer(
+        Duration.zero,
+            () => scrollC.jumpTo(scrollC.position.maxScrollExtent),
+      );
+
+      chatC.clear();
+
+      await users
+          .doc(email)
+          .collection("chats")
+          .doc(argument["chat_id"])
+          .update({
+        "lastTime": date,
+      });
+
+      final checkChatsFriend = await users
+          .doc(argument["friendEmail"])
+          .collection("chats")
+          .doc(argument["chat_id"])
+          .get();
+
+      if (checkChatsFriend.exists) {
+        // exist on friend DB
+        // first check total unread
+        final checkTotalUnread = await chats
+            .doc(argument["chat_id"])
+            .collection("chat")
+            .where("isRead", isEqualTo: false)
+            .where("pengirim", isEqualTo: email)
+            .get();
+
+        // total unread for friend
+        total_unread = checkTotalUnread.docs.length;
+
+        await users
+            .doc(argument["friendEmail"])
+            .collection("chats")
+            .doc(argument["chat_id"])
+            .update({"lastTime": date, "total_unread": total_unread});
+      } else {
+        // not exist on friend DB
+        await users
+            .doc(argument["friendEmail"])
+            .collection("chats")
+            .doc(argument["chat_id"])
+            .set({
+          "connection": email,
+          "lastTime": date,
+          "total_unread": 1,
+        });
+      }
+    }
+  }
 
   @override
   void onInit() {
-    super.onInit();
-    // Get the driver_id from arguments passed to the route
-    driverId = Get.arguments as String;
+    final Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
+    //userId = (arguments['user_id'] as String?)!;
 
-    // Get the current user's ID from FirebaseAuth
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      currentUserId = user.uid;
-    } else {
-      // Handle the case when the user is not authenticated
-      // You can show an error message or redirect to the login screen
-    }
-
-    // Fetch messages for the conversation
-    fetchMessages();
-  }
-
-  void fetchMessages() async {
-    try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('conversations')
-          .where('client_id', isEqualTo: currentUserId)
-          .where('driver_id', isEqualTo: driverId)
-          .get();
-
-      List<Message> fetchedMessages = [];
-      for (QueryDocumentSnapshot document in snapshot.docs) {
-        Map<String, dynamic>? data = document.data() as Map<String, dynamic>?; // Explicitly cast to Map<String, dynamic>
-        if (data != null) {
-          Message message = Message.fromJson(data);
-          fetchedMessages.add(message);
-        }
+    chatC = TextEditingController();
+    scrollC = ScrollController();
+    focusNode = FocusNode();
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        isShowEmoji.value = false;
       }
-
-      // Update the messages list
-      messages.addAll(fetchedMessages);
-    } catch (error) {
-      // Handle the error
-    }
+    });
+    super.onInit();
   }
 
-
-  void sendMessage(String text) {
-
+  @override
+  void onClose() {
+    chatC.dispose();
+    scrollC.dispose();
+    focusNode.dispose();
+    super.onClose();
   }
-}
 
+  void goToAddClaim(){
+    //Get.toNamed(AppRoutes.addClaim);
+  }  }

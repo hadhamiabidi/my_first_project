@@ -1,11 +1,11 @@
-class Message {
+class Conversation {
   final String sender;
   final String text;
   final DateTime timestamp;
   final String clientId;
   final String driverId;
 
-  Message({
+  Conversation({
     required this.sender,
     required this.text,
     required this.timestamp,
@@ -13,8 +13,8 @@ class Message {
     required this.driverId,
   });
 
-  factory Message.fromJson(Map<String, dynamic> json) {
-    return Message(
+  factory Conversation.fromJson(Map<String, dynamic> json) {
+    return Conversation(
       sender: json['sender'],
       text: json['text'],
       timestamp: DateTime.parse(json['timestamp']),
@@ -33,3 +33,4 @@ class Message {
     };
   }
 }
+
