@@ -71,7 +71,7 @@ class OnboardingPage extends StatelessWidget {
                 elevation: 0,
                 onPressed: _controller.forwardAction,
                 child: Obx(() {
-                  return Text(_controller.isLastPage ? 'Start' : 'Next');
+                  return Text(_controller.isLastPage ? 'Commencer' : 'Suivant');
                 }),
               ),
             ),

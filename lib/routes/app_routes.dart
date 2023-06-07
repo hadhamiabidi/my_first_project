@@ -14,5 +14,7 @@ class AppRoutes {
   static const chat = '/chat';
   static const register = '/register';
   static const forgetPassword = '/forget-password';
+  static const aboutUs = '/about-us';
+  static const settings = '/settings';
 
 }

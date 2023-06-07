@@ -15,6 +15,8 @@ class OrdersController extends GetxController with BaseController{
   void onInit() {
     super.onInit();
     _fetchOrders();
+    print("hello moussa");
+    print(FirebaseAuth.instance.currentUser?.uid);
   }
 
 
@@ -48,7 +50,7 @@ class OrdersController extends GetxController with BaseController{
 
 
   void goToOrderDetails(OrderModel item) {
-    Get.toNamed(AppRoutes.order, arguments: item);
+    Get.toNamed(AppRoutes.order, arguments: {'item': item, 'isDriver': false});
   }
 
 }

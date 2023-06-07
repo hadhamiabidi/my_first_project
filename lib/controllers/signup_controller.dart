@@ -69,7 +69,7 @@ class SignupController extends GetxController with BaseController {
         "lastName": nomField.text,
         "email": emailField.text,
         "phone": numField.text,
-        "isDriver":isDriver
+        "isDriver":isDriver.value
       });
       hideLoading();
       // Show a success message
@@ -82,6 +82,7 @@ class SignupController extends GetxController with BaseController {
       hideLoading();
       Get.snackbar("Error", e.message!, snackPosition: SnackPosition.BOTTOM);
     } catch (e) {
+      print("Hello error");
       hideLoading();
       // Show an error message
       Get.snackbar(

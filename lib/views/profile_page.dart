@@ -1,77 +1,79 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../controllers/profile_controller.dart';
 
 class ProfilePage extends StatelessWidget {
+  final ProfileController _controller = Get.put(ProfileController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Obx(() => Column(
           children: [
-            _getHeader(),
-            const SizedBox(height: 10,),
-            _profileName(context,"Sami"),
-            SizedBox(
-              height: 14,
-            ),
-            _heading(context, "personal Détails"),
-            SizedBox(
-              height: 6,
-            ),
-            _detailsCard(),
-            SizedBox(height: 10,
-            ),
-            _heading(context, "Settings"),
-            SizedBox(
-              height: 6,
-            ),
-            _settingsCard()
-
+            _buildHeader(_controller),
+            SizedBox(height: 10),
+            _buildProfileName(context, _controller.currentUser.value.firstName + " " + _controller.currentUser.value.lastName),
+            SizedBox(height: 14),
+            _buildHeading(context, "Détails personnels"),
+            SizedBox(height: 6),
+            _buildDetailsCard(_controller),
           ],
-        ),
+        )),
       ),
     );
   }
 }
 
-Widget _getHeader() {
+Widget _buildHeader(ProfileController controller) {
+  final String firstName = controller.currentUser.value.firstName;
+  final String lastName = controller.currentUser.value.lastName;
+  final String initials = (firstName.isNotEmpty ? firstName[0] : '') +
+      (lastName.isNotEmpty ? lastName[0] : '');
+
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Padding(padding: const EdgeInsets.all(10.0),
-        child: Container(
-          height: 100,
-          width: 100,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: NetworkImage(
-                      "https://cdn.pixabay.com/photo/2016/03/19/08/35/guy-1266366_640.jpg"
-                  )
-
-              )
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: CircleAvatar(
+          backgroundColor: Colors.black,
+          radius: 50,
+          child: Text(
+            initials.toUpperCase(),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      )
+      ),
     ],
   );
 }
 
-Widget _profileName(BuildContext context, String name) {
+Widget _buildProfileName(BuildContext context, String name) {
   return Container(
     width: MediaQuery.of(context).size.width * 0.80,
     child: Center(
       child: Text(
         name,
-        style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.w800),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 24,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     ),
   );
 }
 
-Widget _heading(BuildContext context, String heading){
+Widget _buildHeading(BuildContext context, String heading) {
   return Container(
-    width: MediaQuery.of(context).size.width *0.80,
+    width: MediaQuery.of(context).size.width * 0.80,
     child: Center(
       child: Text(
         heading,
@@ -81,7 +83,7 @@ Widget _heading(BuildContext context, String heading){
   );
 }
 
-Widget _detailsCard(){
+Widget _buildDetailsCard(ProfileController controller) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Card(
@@ -90,41 +92,7 @@ Widget _detailsCard(){
         children: [
           ListTile(
             leading: Icon(Icons.email),
-            title: Text("Sami@gmail.com"),
-          ),
-          Divider(
-            height: 0.6,
-            color: Colors.black87,
-          ),
-          ListTile(
-            leading: Icon(Icons.phone),
-            title: Text("512456355"),
-          ),
-          Divider(
-            height: 0.6,
-            color: Colors.black87,
-          ),
-          ListTile(
-            leading: Icon(Icons.location_on),
-            title: Text("Tunis"),
-          ),
-        ],
-      ),
-
-    ),
-  );
-}
-
-Widget _settingsCard() {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Card(
-      elevation: 4,
-      child: Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text("Settings"),
+            title: Text(FirebaseAuth.instance.currentUser!.email!),
           ),
           Divider(
             height: 0.6,
@@ -132,7 +100,17 @@ Widget _settingsCard() {
           ),
           ListTile(
             leading: Icon(Icons.dashboard_customize),
-            title: Text("About Us"),
+            title: Text("À propos de nous"),
+            onTap: () => controller.goToAboutUs(),
+          ),
+          Divider(
+            height: 0.6,
+            color: Colors.black87,
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text("Paramètres"),
+            onTap: () => controller.goToSettings(),
           ),
           Divider(
             height: 0.6,
@@ -140,19 +118,11 @@ Widget _settingsCard() {
           ),
           ListTile(
             leading: Icon(Icons.logout),
-            title: Text("Charge Theme"),
-          ),
-          Divider(
-            height: 0.6,
-            color: Colors.black87,
-          ),
-          ListTile(
-            leading: Icon(Icons.logout),
-            title: Text("Logout"),
+            title: Text("Déconnexion"),
+            onTap: () => controller.logout(),
           ),
         ],
       ),
-
     ),
   );
 }

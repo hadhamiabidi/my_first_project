@@ -10,6 +10,7 @@ class DashboardController extends GetxController {
   void onInit() {
     super.onInit();
     fetchUserData();
+
   }
 
   void fetchUserData() async {
@@ -37,11 +38,22 @@ class DashboardController extends GetxController {
       case 5:
         Get.toNamed(AppRoutes.conversations);
         break;
+      case 3:
+        Get.toNamed(AppRoutes.settings);
+        break;
       default:
       // Do nothing
         break;
     }
   }
 
-
+  Future<void> logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.offAndToNamed(AppRoutes.login);
+    } catch (e) {
+      // Handle logout error
+      print("Logout error: $e");
+    }
+  }
 }

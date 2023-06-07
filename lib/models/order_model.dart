@@ -5,7 +5,7 @@ class OrderModel {
 
   final String title;
   final String description;
-  final int status;
+  late final int status;
   final double price;
 
   final String user_id;
@@ -13,7 +13,7 @@ class OrderModel {
   final String destination_location;
   final DateTime delivery_date;
 
-  final String? driver_id; // new nullable field for driver ID
+  final String? driver_uid; // new nullable field for driver ID
 
   OrderModel({
     required this.title,
@@ -24,7 +24,7 @@ class OrderModel {
     required this.start_location,
     required this.destination_location,
     required this.delivery_date,
-    this.driver_id, // made optional with default null value
+    this.driver_uid, // made optional with default null value
     this.uid, // made optional with default null value
   });
 
@@ -38,7 +38,7 @@ class OrderModel {
       start_location: map['start_location'],
       destination_location: map['destination_location'],
       delivery_date: (map['delivery_date'] as Timestamp).toDate(),
-      driver_id: map['driver_id'],
+      driver_uid: map['driver_uid'],
       uid: uid,
     );
   }

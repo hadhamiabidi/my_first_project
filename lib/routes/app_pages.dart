@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:pfe/bindings/about_us_binding.dart';
 import 'package:pfe/bindings/bottom_navigation_binding.dart';
 import 'package:pfe/bindings/add_order_binding.dart';
 import 'package:pfe/bindings/chat_binding.dart';
@@ -10,7 +11,9 @@ import 'package:pfe/bindings/my_order_binding.dart';
 import 'package:pfe/bindings/onboarding_binding.dart';
 import 'package:pfe/bindings/order_details_binding.dart';
 import 'package:pfe/bindings/orders_binding.dart';
+import 'package:pfe/bindings/settings_binding.dart';
 import 'package:pfe/bindings/signup_binding.dart';
+import 'package:pfe/views/about_us.dart';
 import 'package:pfe/views/add_order_page.dart';
 import 'package:pfe/views/chat_page.dart';
 import 'package:pfe/views/claim_page.dart';
@@ -22,6 +25,7 @@ import 'package:pfe/views/my_order_page.dart';
 import 'package:pfe/views/order_details_page.dart';
 import 'package:pfe/views/orders_page.dart';
 import 'package:pfe/views/profile_page.dart';
+import 'package:pfe/views/settings_screen.dart';
 import 'package:pfe/views/signup_page.dart';
 import '../bindings/dashboard_binding.dart';
 import '../bindings/profile_binding.dart';
@@ -106,6 +110,16 @@ class AppPages {
       name: AppRoutes.forgetPassword,
       page: () =>  ForgetPasswordPage(),
       binding: ForgetPasswordBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.aboutUs,
+      page: () =>  AboutUsScreen(),
+      binding: AboutUsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.settings,
+      page: () =>  SettingsPage(),
+      binding: SettingsBinding(),
     ),
   ];
 }

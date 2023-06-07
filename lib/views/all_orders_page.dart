@@ -15,7 +15,6 @@ class AllOrdersPage extends StatelessWidget {
     return Scaffold(
       appBar: const MyAppBar(
         title: 'Liste de commandes',
-        showBackButton: true,
       ),
       body: Obx(
         () => ListView.builder(
@@ -24,9 +23,9 @@ class AllOrdersPage extends StatelessWidget {
             final item = controller.deliveryItems[index];
             return GestureDetector(
               onTap: () {
-                // Add your click action here, for example:
-                Get.toNamed('/order-details', arguments: item);
+                Get.toNamed('/order-details', arguments: {'item': item, 'isDriver': true});
               },
+
               child: OrderItemWidget(item: item),
             );
           },
