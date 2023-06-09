@@ -75,7 +75,11 @@ class SignupController extends GetxController with BaseController {
       // Show a success message
       Get.snackbar("Success", "User created successfully",
           snackPosition: SnackPosition.BOTTOM);
-      Get.toNamed(AppRoutes.dashboard);
+      if(isDriver.value){
+        Get.offAllNamed(AppRoutes.bottomNavigation);
+      }else{
+        Get.toNamed(AppRoutes.dashboard);
+      }
       // Navigate to the home page or the next screen
       // ...
     } on FirebaseAuthException catch (e) {
