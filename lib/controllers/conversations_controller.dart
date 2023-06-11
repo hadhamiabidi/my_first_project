@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 
 import '../routes/app_routes.dart';
 
-
 class ConversationsController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot<Map<String, dynamic>>> chatsStream(String email) {
+    print("chatsStream");
+    print(email);
     return firestore
         .collection('users')
         .doc(email)
@@ -16,12 +17,13 @@ class ConversationsController extends GetxController {
         .snapshots();
   }
 
+
+
   Stream<DocumentSnapshot<Map<String, dynamic>>> friendStream(String email) {
     return firestore.collection('users').doc(email).snapshots();
   }
 
   void goToChatRoom(String chat_id, String email, String friendEmail) async {
-    print("goToChatRoom");
     CollectionReference chats = firestore.collection('chats');
     CollectionReference users = firestore.collection('users');
 
@@ -40,16 +42,14 @@ class ConversationsController extends GetxController {
           .update({"isRead": true});
     });
 
-    await users
-        .doc(email)
-        .collection("chats")
-        .doc(chat_id)
-        .update({"total_unread": 0});
-    Get.toNamed(AppRoutes.chat, arguments: {
-      "chat_id": chat_id,
-      "friendEmail": friendEmail,
-    });
-
+    Get.toNamed(
+      AppRoutes.chat,
+      arguments: {
+        "chat_id": chat_id,
+        "friendEmail": friendEmail,
+      },
+    );
   }
+
 
 }

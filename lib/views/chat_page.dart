@@ -30,12 +30,54 @@ class ChatPage extends GetView<ChatController> {
                 color: Colors.white,
               ),
               const SizedBox(width: 5),
+              CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.grey,
+                child: StreamBuilder<DocumentSnapshot<Object?>>(
+                  stream: controller.streamFriendData(
+                    (Get.arguments as Map<String, dynamic>)["friendEmail"],
+                  ),
+                  builder: (context, snapFriendUser) {
+                    if (snapFriendUser.connectionState == ConnectionState.active) {
+                      var dataFriend = snapFriendUser.data!.data() as Map<String, dynamic>;
+                      String firstName = dataFriend["firstName"];
+                      String lastName = dataFriend["lastName"];
+                      String initials = "${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}";
+
+                      return CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                        child: Text(
+                          initials,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      );
+                    }
+                    return CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Text(
+                        "",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
         title: StreamBuilder<DocumentSnapshot<Object?>>(
           stream: controller.streamFriendData(
-              (Get.arguments as Map<String, dynamic>)["chat_id"]),
+              (Get.arguments as Map<String, dynamic>)["friendEmail"]),
           builder: (context, snapFriendUser) {
             if (snapFriendUser.connectionState == ConnectionState.active) {
               var dataFriend =
@@ -44,7 +86,7 @@ class ChatPage extends GetView<ChatController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    dataFriend["firstName"],
+                    dataFriend["firstName"] + " "+dataFriend["lastName"],
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -55,18 +97,18 @@ class ChatPage extends GetView<ChatController> {
               );
             }
 
-            return Column(
+            return const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  'جار التحميل...',
+                  "En cours de chargement...",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
-                  'جار التحميل...',
+                  "En cours de chargement...",
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -117,7 +159,7 @@ class ChatPage extends GetView<ChatController> {
                                 ItemChat(
                                   msg: "${alldata[index]["msg"]}",
                                   isSender: alldata[index]["pengirim"] ==
-                                      FirebaseAuth.instance.currentUser?.uid
+                                      FirebaseAuth.instance.currentUser!.uid!
                                       ? true
                                       : false,
                                   time: "${alldata[index]["time"]}",
@@ -130,7 +172,7 @@ class ChatPage extends GetView<ChatController> {
                               return ItemChat(
                                 msg: "${alldata[index]["msg"]}",
                                 isSender: alldata[index]["pengirim"] ==
-                                    FirebaseAuth.instance.currentUser?.uid
+                                    FirebaseAuth.instance.currentUser!.uid!
                                     ? true
                                     : false,
                                 time: "${alldata[index]["time"]}",
@@ -147,7 +189,7 @@ class ChatPage extends GetView<ChatController> {
                                   ItemChat(
                                     msg: "${alldata[index]["msg"]}",
                                     isSender: alldata[index]["pengirim"] ==
-                                        FirebaseAuth.instance.currentUser?.uid
+                                        FirebaseAuth.instance.currentUser!.uid!
                                         ? true
                                         : false,
                                     time: "${alldata[index]["time"]}",
@@ -206,7 +248,7 @@ class ChatPage extends GetView<ChatController> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(100),
                       onTap: () => controller.newChat(
-                        'admin@admin.com',
+                        FirebaseAuth.instance.currentUser!.uid,
                         Get.arguments as Map<String, dynamic>,
                         controller.chatC.text,
                       ),
