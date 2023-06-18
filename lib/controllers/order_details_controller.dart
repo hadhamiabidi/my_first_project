@@ -103,79 +103,87 @@ class OrderDetailsController extends GetxController with BaseController {
   }
 
   void goToConversation(String? driver_id) async {
-    // Get the current user's email
-    String currentUserEmail = FirebaseAuth.instance.currentUser!.email!;
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Query the "users" collection to find the document with the driver's UID
-    var driverSnapshot = await FirebaseFirestore.instance
+    // Query the "users" collection to find the document with the current user's UID
+    var currentUserSnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .doc(driver_id)
+        .doc(currentUserId)
         .get();
 
-    // Check if the driver document exists
-    if (driverSnapshot.exists) {
-      var driverDocument = driverSnapshot.data() as Map<String, dynamic>;
+    // Check if the current user document exists
+    if (currentUserSnapshot.exists) {
+      var currentUserDocument = currentUserSnapshot.data() as Map<String, dynamic>;
 
-      // Get the driver's email
-      String driverID = driverSnapshot.id;
+      // Get the current user's email
+      String currentUserEmail = currentUserSnapshot.id;
 
-      // Get the driver's chat ID
-      String? driverChatId = driverDocument['chat_id'];
+      // Get the current user's chats collection
+      CollectionReference currentUserChatsCollection =
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .collection("chats");
 
-      if (driverChatId != null) {
-        // Navigate to the existing chat room with the driver using the chat ID
+      // Query the current user's chats collection for a chat with a matching connection
+      var querySnapshot = await currentUserChatsCollection
+          .where('connection', isEqualTo: driver_id)
+          .get();
+
+      // Check if a chat with the specified driver_id exists
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the first matching chat document
+        var chatDocument = querySnapshot.docs.first;
+
+        // Get the chat ID and navigate to the existing chat room with the driver
+        String chatId = chatDocument.id;
         Get.toNamed(AppRoutes.chat, arguments: {
-          'chat_id': driverChatId,
-          'friendEmail': driverID,
+          'chat_id': chatId,
+          'friendEmail': driver_id,
         });
       } else {
-        // Create a new chat room
-        CollectionReference chatsCollection = FirebaseFirestore.instance.collection('chats');
-        DocumentReference newChatDoc = await chatsCollection.add(<String, dynamic>{});
+        CollectionReference chatsCollection =
+        FirebaseFirestore.instance.collection('chats');
 
-        // Update the chat ID for the driver
+        DocumentReference newChatDoc =
+        await chatsCollection.add(<String, dynamic>{});
+
+        await currentUserChatsCollection.doc(newChatDoc.id).set({
+          'chat_id': newChatDoc.id,
+          'connection': driver_id,
+          'lastTime': DateTime.now(),
+          'total_unread': 1,
+        });
+
         await FirebaseFirestore.instance
             .collection('users')
             .doc(driver_id)
             .collection("chats")
             .doc(newChatDoc.id)
             .set({
-              'chat_id': newChatDoc.id,
-              'connection': FirebaseAuth.instance.currentUser!.uid,
-              'lastTime': DateTime.now(),
-              'total_unread': 1,
-            });
-
-
-        // Update the chat ID for the current user
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .collection("chats")
-            .doc(newChatDoc.id)
-            .set({
-              'chat_id': newChatDoc.id,
-              'connection': driverID,
-              'lastTime': DateTime.now(),
-              'total_unread': 1,
-            });
+          'chat_id': newChatDoc.id,
+          'connection': currentUserId,
+          'lastTime': DateTime.now(),
+          'total_unread': 1,
+        });
 
         // Navigate to the newly created chat room
         print("created chat room");
         print(newChatDoc.id);
-        print(driverID);
+        print(driver_id);
         Get.toNamed(
           AppRoutes.chat,
           arguments: {
             'chat_id': newChatDoc.id,
-            'friendEmail': driverID,
+            'friendEmail': driver_id,
           },
         );
       }
     } else {
-      // Handle the case where the driver document does not exist
-      Get.snackbar('Error', 'Driver not found.');
+      // Handle the case where the current user document does not exist
+      Get.snackbar('Error', 'User not found.');
     }
   }
+
 
 }

@@ -35,10 +35,10 @@ class OnboardingController extends GetxController with BaseController {
 
           if (isDriver) {
             // Navigate to the driver dashboard
-            Get.offNamed(AppRoutes.bottomNavigation);
+            Get.offAllNamed(AppRoutes.bottomNavigation);
           } else {
             // Navigate to the client dashboard
-            Get.offNamed(AppRoutes.dashboard);
+            Get.offAllNamed(AppRoutes.dashboard);
           }
           hideLoading();
         } else {
@@ -48,7 +48,7 @@ class OnboardingController extends GetxController with BaseController {
         // Handle the error
       }
     } else {
-      Get.offNamed(AppRoutes.login);
+      Get.offAllNamed(AppRoutes.login);
     }
   }
   List<OnboardingInfo> onboardingPages = [

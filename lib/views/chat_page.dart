@@ -12,6 +12,7 @@ import '../widgets/message_item.dart';
 
 class ChatPage extends GetView<ChatController> {
   final String chat_id = (Get.arguments as Map<String, dynamic>)["chat_id"];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,18 +45,26 @@ class ChatPage extends GetView<ChatController> {
                       String lastName = dataFriend["lastName"];
                       String initials = "${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}";
 
-                      return CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.white,
-                        child: Text(
-                          initials,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                      if (dataFriend.containsKey("profilePictureUrl")) {
+                        String? profilePictureUrl = dataFriend["profilePictureUrl"];
+                        return CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(profilePictureUrl!),
+                        );
+                      } else {
+                        return CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.white,
+                          child: Text(
+                            initials,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     }
                     return CircleAvatar(
                       radius: 30,
@@ -159,8 +168,7 @@ class ChatPage extends GetView<ChatController> {
                                 ItemChat(
                                   msg: "${alldata[index]["msg"]}",
                                   isSender: alldata[index]["pengirim"] ==
-                                      FirebaseAuth.instance.currentUser!.uid!
-                                      ? true
+                                      FirebaseAuth.instance.currentUser!.uid? true
                                       : false,
                                   time: "${alldata[index]["time"]}",
                                 ),

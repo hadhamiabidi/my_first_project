@@ -18,7 +18,7 @@ class ConversationsPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColors.primaryColor,
-        title: Text("Liste des conversations"),
+        title: const Text("Liste des conversations"),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -28,121 +28,68 @@ class ConversationsPage extends StatelessWidget {
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: controller.chatsStream(FirebaseAuth.instance.currentUser!.uid),
-                builder: (context, snapshot1) {
-                  if (snapshot1.connectionState == ConnectionState.active) {
-                    var listDocsChats = snapshot1.data!.docs;
-                    if (listDocsChats.isEmpty) {
-                      return Text('');
-                    }
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: listDocsChats.length,
-                      itemBuilder: (context, index) {
-                        return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                          stream: controller.friendStream(listDocsChats[index]["connection"]),
-                          builder: (context, snapshot2) {
-                            if (snapshot2.connectionState == ConnectionState.active) {
-                              var data = snapshot2.data!.data();
-                              if (data?["status"] == "") {
-                                return ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                  onTap: () => controller.goToChatRoom(
-                                    "${listDocsChats[index].id}",
-                                    FirebaseAuth.instance.currentUser!.email!,
-                                    listDocsChats[index]["connection"],
-                                  ),
-                                  leading: CircleAvatar(
-                                    radius: 30,
-                                    backgroundColor: Colors.black26,
-                                    child: Text(
-                                      "${data?["firstName"][0].toUpperCase()}${data?["lastName"][0].toUpperCase()}",
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  title: Text(
-                                    "${data?["firstName"]} ${data?["lastName"]}",
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  trailing: listDocsChats[index]["total_unread"] == 0
-                                      ? SizedBox()
-                                      : Chip(
-                                    backgroundColor: Colors.red[900],
-                                    label: Text(
-                                      "${listDocsChats[index]["total_unread"]}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return Material(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    side: const BorderSide(color: Colors.red, width: 1),
-                                  ),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                    onTap: () => controller.goToChatRoom(
-                                      "${listDocsChats[index].id}",
-                                      FirebaseAuth.instance.currentUser!.email!,
-                                      listDocsChats[index]["connection"],
-                                    ),
-                                    leading: CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: Colors.black26,
-                                      child: Text(
-                                        "${data?["firstName"][0].toUpperCase()}${data?["lastName"][0].toUpperCase()}",
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    title: Text(
-                                      "${data?["firstName"]} ${data?["lastName"]}",
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    trailing: listDocsChats[index]["total_unread"] == 0
-                                        ? SizedBox()
-                                        : Chip(
-                                      backgroundColor: Colors.red[900],
-                                      label: Text(
-                                        "${listDocsChats[index]["total_unread"]}",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                            }
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        );
-                      },
-                    );
-                  } else if (snapshot1.connectionState == ConnectionState.waiting) {
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else {
-                    return Text('');
                   }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const SizedBox();
+                  }
+                  final listDocsChats = snapshot.data!.docs;
+                  return ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: listDocsChats.length,
+                    itemBuilder: (context, index) {
+                      final chatDoc = listDocsChats[index];
+                      return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        stream: controller.friendStream(chatDoc["connection"]),
+                        builder: (context, friendSnapshot) {
+                          if (friendSnapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (!friendSnapshot.hasData) {
+                            return const SizedBox();
+                          }
+                          final friendData = friendSnapshot.data!.data();
+                          final firstName = friendData?["firstName"];
+                          final lastName = friendData?["lastName"];
+                          final profilePictureUrl = friendData?["profilePictureUrl"];
+
+                          return ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                            onTap: () => controller.goToChatRoom(
+                              chatDoc.id,
+                              FirebaseAuth.instance.currentUser!.email!,
+                              chatDoc["connection"],
+                            ),
+                            leading: _buildLeadingWidget(firstName, lastName, profilePictureUrl),
+                            title: Text(
+                              "$firstName $lastName",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            trailing: chatDoc["total_unread"] == 0
+                                ? SizedBox()
+                                : Chip(
+                              backgroundColor: Colors.red[900],
+                              label: Text(
+                                "${chatDoc["total_unread"]}",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
                 },
               ),
             ),
@@ -152,14 +99,28 @@ class ConversationsPage extends StatelessWidget {
     );
   }
 
-  String _getInitials(String fullName) {
-    final List<String> names = fullName.split(" ");
-    final StringBuffer initials = StringBuffer();
+  Widget _buildLeadingWidget(String? firstName, String? lastName, String? profilePictureUrl) {
+    final initials = (firstName?.isNotEmpty == true ? firstName![0] : '') +
+        (lastName?.isNotEmpty == true ? lastName![0] : '');
 
-    for (final name in names) {
-      initials.write(name[0]);
+    if (profilePictureUrl?.isNotEmpty == true) {
+      return CircleAvatar(
+        radius: 30,
+        backgroundImage: NetworkImage(profilePictureUrl!),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.black26,
+        child: Text(
+          initials.toUpperCase(),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      );
     }
-
-    return initials.toString();
   }
 }
