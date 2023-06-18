@@ -14,11 +14,11 @@ class ProfilePage extends StatelessWidget {
         child: Obx(() => Column(
           children: [
             _buildHeader(_controller),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             _buildProfileName(context, _controller.currentUser.value.firstName + " " + _controller.currentUser.value.lastName),
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
             _buildHeading(context, "Détails personnels"),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             _buildDetailsCard(_controller),
           ],
         )),
@@ -33,27 +33,61 @@ Widget _buildHeader(ProfileController controller) {
   final String initials = (firstName.isNotEmpty ? firstName[0] : '') +
       (lastName.isNotEmpty ? lastName[0] : '');
 
+  final String profilePictureUrl = controller.currentUser.value.profilePictureUrl;
+
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Padding(
         padding: const EdgeInsets.all(10.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.black,
-          radius: 50,
-          child: Text(
-            initials.toUpperCase(),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
+        child: Stack(
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.black,
+              radius: 50,
+              child: profilePictureUrl != null && profilePictureUrl.isNotEmpty
+                  ? ClipOval(
+                child: Image.network(
+                  profilePictureUrl,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              )
+                  : Text(
+                initials.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: () {
+                  controller.addPicture();
+                },
+                child: const CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.blue,
+                  child: Icon(
+                    Icons.add,
+                    size: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     ],
   );
 }
+
 
 Widget _buildProfileName(BuildContext context, String name) {
   return Container(
@@ -61,7 +95,7 @@ Widget _buildProfileName(BuildContext context, String name) {
     child: Center(
       child: Text(
         name,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black,
           fontSize: 24,
           fontWeight: FontWeight.w800,
@@ -77,7 +111,7 @@ Widget _buildHeading(BuildContext context, String heading) {
     child: Center(
       child: Text(
         heading,
-        style: TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16),
       ),
     ),
   );
@@ -94,16 +128,16 @@ Widget _buildDetailsCard(ProfileController controller) {
             leading: Icon(Icons.email),
             title: Text(FirebaseAuth.instance.currentUser!.email!),
           ),
-          Divider(
+          const Divider(
             height: 0.6,
             color: Colors.black87,
           ),
           ListTile(
             leading: Icon(Icons.dashboard_customize),
-            title: Text("À propos de nous"),
+            title: const Text("À propos de nous"),
             onTap: () => controller.goToAboutUs(),
           ),
-          Divider(
+          const Divider(
             height: 0.6,
             color: Colors.black87,
           ),
@@ -112,7 +146,7 @@ Widget _buildDetailsCard(ProfileController controller) {
             title: Text("Paramètres"),
             onTap: () => controller.goToSettings(),
           ),
-          Divider(
+          const Divider(
             height: 0.6,
             color: Colors.black87,
           ),

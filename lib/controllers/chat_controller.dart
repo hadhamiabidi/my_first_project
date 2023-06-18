@@ -62,11 +62,7 @@ class ChatController extends GetxController {
 
       chatC.clear();
 
-      await users
-          .doc(email)
-          .collection("chats")
-          .doc(argument["chat_id"])
-          .update({
+      await users.doc(email).collection("chats").doc(argument["chat_id"]).update({
         "lastTime": date,
       });
 
@@ -77,17 +73,13 @@ class ChatController extends GetxController {
           .get();
 
       if (checkChatsFriend.exists) {
-        // exist on friend DB
-        // first check total unread
-        final checkTotalUnread = await chats
+        total_unread = await chats
             .doc(argument["chat_id"])
             .collection("chat")
             .where("isRead", isEqualTo: false)
             .where("pengirim", isEqualTo: email)
-            .get();
-
-        // total unread for friend
-        total_unread = checkTotalUnread.docs.length;
+            .get()
+            .then((querySnapshot) => querySnapshot.docs.length);
 
         await users
             .doc(argument["friendEmail"])
@@ -95,7 +87,6 @@ class ChatController extends GetxController {
             .doc(argument["chat_id"])
             .update({"lastTime": date, "total_unread": total_unread});
       } else {
-        // not exist on friend DB
         await users
             .doc(argument["friendEmail"])
             .collection("chats")
@@ -108,6 +99,7 @@ class ChatController extends GetxController {
       }
     }
   }
+
 
   @override
   void onInit() {

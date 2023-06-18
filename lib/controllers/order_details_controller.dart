@@ -74,8 +74,6 @@ class OrderDetailsController extends GetxController with BaseController {
   }
 
   void acceptOrder() async {
-    showLoading();
-
     // Update the status attribute of the order to 1 in Firestore
     await FirebaseFirestore.instance
         .collection('orders')
@@ -84,7 +82,6 @@ class OrderDetailsController extends GetxController with BaseController {
       'status': 1,
       'driver_uid': FirebaseAuth.instance.currentUser!.uid, // Replace 'your_driver_uid_here' with the actual driver UID
     });
-    hideLoading();
     // Display a success message to the user
     Get.snackbar('Order Accepted', 'The order has been accepted.');
     // Navigate to the appropriate page
@@ -105,8 +102,87 @@ class OrderDetailsController extends GetxController with BaseController {
     Get.offAllNamed(AppRoutes.bottomNavigation);
   }
 
-  void goToConversation(String? driver_id) {
-    Get.toNamed(AppRoutes.chat, arguments: {'user_id': driver_id, 'isDriver': isDriver});
+  void goToConversation(String? driver_id) async {
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+    // Query the "users" collection to find the document with the current user's UID
+    var currentUserSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserId)
+        .get();
+
+    // Check if the current user document exists
+    if (currentUserSnapshot.exists) {
+      var currentUserDocument = currentUserSnapshot.data() as Map<String, dynamic>;
+
+      // Get the current user's email
+      String currentUserEmail = currentUserSnapshot.id;
+
+      // Get the current user's chats collection
+      CollectionReference currentUserChatsCollection =
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .collection("chats");
+
+      // Query the current user's chats collection for a chat with a matching connection
+      var querySnapshot = await currentUserChatsCollection
+          .where('connection', isEqualTo: driver_id)
+          .get();
+
+      // Check if a chat with the specified driver_id exists
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the first matching chat document
+        var chatDocument = querySnapshot.docs.first;
+
+        // Get the chat ID and navigate to the existing chat room with the driver
+        String chatId = chatDocument.id;
+        Get.toNamed(AppRoutes.chat, arguments: {
+          'chat_id': chatId,
+          'friendEmail': driver_id,
+        });
+      } else {
+        CollectionReference chatsCollection =
+        FirebaseFirestore.instance.collection('chats');
+
+        DocumentReference newChatDoc =
+        await chatsCollection.add(<String, dynamic>{});
+
+        await currentUserChatsCollection.doc(newChatDoc.id).set({
+          'chat_id': newChatDoc.id,
+          'connection': driver_id,
+          'lastTime': DateTime.now(),
+          'total_unread': 1,
+        });
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(driver_id)
+            .collection("chats")
+            .doc(newChatDoc.id)
+            .set({
+          'chat_id': newChatDoc.id,
+          'connection': currentUserId,
+          'lastTime': DateTime.now(),
+          'total_unread': 1,
+        });
+
+        // Navigate to the newly created chat room
+        print("created chat room");
+        print(newChatDoc.id);
+        print(driver_id);
+        Get.toNamed(
+          AppRoutes.chat,
+          arguments: {
+            'chat_id': newChatDoc.id,
+            'friendEmail': driver_id,
+          },
+        );
+      }
+    } else {
+      // Handle the case where the current user document does not exist
+      Get.snackbar('Error', 'User not found.');
+    }
   }
 
 

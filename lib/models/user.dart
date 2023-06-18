@@ -4,6 +4,7 @@ class UserModel {
   final String firstName;
   final String lastName;
   final bool isDriver;
+  final String profilePictureUrl; // New field
 
   UserModel({
     required this.uid,
@@ -11,6 +12,7 @@ class UserModel {
     required this.firstName,
     required this.lastName,
     required this.isDriver,
+    required this.profilePictureUrl, // New field
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -20,8 +22,10 @@ class UserModel {
       firstName: json['firstName'] ?? '',
       lastName: json['lastName'] ?? '',
       isDriver: json['isDriver'] ?? false,
+      profilePictureUrl: json['profilePictureUrl'] ?? '', // New field
     );
   }
+
   static UserModel empty() {
     return UserModel(
       uid: '',
@@ -29,8 +33,7 @@ class UserModel {
       firstName: '',
       lastName: '',
       isDriver: false,
+      profilePictureUrl: '', // New field
     );
   }
 }
-
-

@@ -1,18 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/claims_controller.dart';
 import '../widgets/custum_app_bar.dart';
 
-
 class ClaimsPage extends StatelessWidget {
-  const ClaimsPage({super.key});
-
+  const ClaimsPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    final ClaimsController claimController = Get.put(ClaimsController());
+    final ClaimsController controller = Get.put(ClaimsController());
 
     return Scaffold(
       appBar: const MyAppBar(
@@ -21,16 +18,19 @@ class ClaimsPage extends StatelessWidget {
       ),
       body: Obx(
             () => ListView.builder(
-          itemCount: claimController.claims.length,
+          itemCount: controller.claims.length,
           itemBuilder: (BuildContext context, int index) {
-            final claim = claimController.claims[index];
+            final claim = controller.claims[index];
+            final bool isDescriptionEmpty = claim.description.isEmpty;
+            final Color backgroundColor = isDescriptionEmpty ? Colors.yellowAccent : Colors.greenAccent;
+
             return Container(
-              margin: EdgeInsets.all(16),
-              padding: EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: backgroundColor,
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: [
+                boxShadow:  [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 1,
@@ -53,7 +53,7 @@ class ClaimsPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        claim.date,
+                        claim.date.substring(0, 19),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -61,10 +61,10 @@ class ClaimsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     claim.description,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                     ),
@@ -74,6 +74,12 @@ class ClaimsPage extends StatelessWidget {
             );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.addNewClaim();
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

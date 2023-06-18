@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:pfe/config/base_controller.dart';
 import 'package:pfe/models/user.dart';
 import 'package:pfe/routes/app_routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pfe/views/about_us.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:image_picker/image_picker.dart';
 
 
-class ProfileController extends GetxController {
+class ProfileController extends GetxController with BaseController {
   Rx<UserModel> currentUser = Rx<UserModel>(UserModel.empty());
   @override
   void onReady() {
@@ -54,5 +58,35 @@ class ProfileController extends GetxController {
     Get.toNamed(AppRoutes.settings);
 
   }
+
+  Future<void> addPicture() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      showLoading();
+      final imageFile = File(pickedFile.path);
+
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        final timestamp = DateTime.now().microsecondsSinceEpoch;
+        final imageName = '${currentUser.uid}_$timestamp.jpg';
+
+        final storageReference = firebase_storage.FirebaseStorage.instance.ref().child('profile_images/$imageName');
+        final uploadTask = storageReference.putFile(imageFile);
+        await uploadTask.whenComplete(() {});
+
+        final imageUrl = await storageReference.getDownloadURL();
+
+        final userCollection = FirebaseFirestore.instance.collection('users');
+        final userDoc = userCollection.doc(currentUser.uid);
+        await userDoc.update({'profilePictureUrl': imageUrl});
+        getCurrentUserData();
+        hideLoading();
+      }
+    }
+  }
+
+
 
 }

@@ -8,95 +8,87 @@ import '../controllers/conversations_controller.dart';
 import '../widgets/conversation_item.dart';
 
 class ConversationsPage extends StatelessWidget {
-  final ConversationsController controller = Get.put(ConversationsController());
-
-  ConversationsPage({Key? key}) : super(key: key);
+  const ConversationsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ConversationsController controller = Get.put(ConversationsController());
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColors.primaryColor,
-        title: Text("Liste de conversation"),
+        title: const Text("Liste des conversations"),
         centerTitle: true,
       ),
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: controller.chatsStream(FirebaseAuth.instance.currentUser!.uid),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    final List<DocumentSnapshot<Map<String, dynamic>>> listDocsChats = snapshot.data!.docs;
-
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: listDocsChats.length,
-                      itemBuilder: (context, index) {
-                        final String connection = listDocsChats[index]['connection'];
-
-                        return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                          stream: controller.friendStream(connection ?? ''),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.active) {
-                              final Map<String, dynamic>? data = snapshot.data?.data();
-                              final String fullName = "${data?['firstName']} ${data?['lastName']}";
-                              final String initials = _getInitials(fullName);
-                              final bool hasUnreadMessages = listDocsChats[index]['total_unread'] != 0;
-
-                              return Material(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  side: BorderSide(color: Colors.black, width: 1),
-                                ),
-                                child: ListTile(
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                  onTap: () => controller.goToChatRoom(
-                                    listDocsChats[index].id,
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                    connection,
-                                  ),
-                                  leading: CircleAvatar(
-                                    backgroundColor: Colors.black,
-                                    child: Text(
-                                      initials.toUpperCase(),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  title: Text(
-                                    fullName.toUpperCase(),
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  trailing: hasUnreadMessages
-                                      ? Chip(
-                                    backgroundColor: Colors.red[900],
-                                    label: Text(
-                                      "${listDocsChats[index]['total_unread']}",
-                                      style: const TextStyle(color: Colors.white),
-                                    ),
-                                  )
-                                      : SizedBox(),
-                                ),
-                              );
-                            }
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        );
-                      },
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
                   }
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const SizedBox();
+                  }
+                  final listDocsChats = snapshot.data!.docs;
+                  return ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: listDocsChats.length,
+                    itemBuilder: (context, index) {
+                      final chatDoc = listDocsChats[index];
+                      return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        stream: controller.friendStream(chatDoc["connection"]),
+                        builder: (context, friendSnapshot) {
+                          if (friendSnapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (!friendSnapshot.hasData) {
+                            return const SizedBox();
+                          }
+                          final friendData = friendSnapshot.data!.data();
+                          final firstName = friendData?["firstName"];
+                          final lastName = friendData?["lastName"];
+                          final profilePictureUrl = friendData?["profilePictureUrl"];
+
+                          return ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                            onTap: () => controller.goToChatRoom(
+                              chatDoc.id,
+                              FirebaseAuth.instance.currentUser!.email!,
+                              chatDoc["connection"],
+                            ),
+                            leading: _buildLeadingWidget(firstName, lastName, profilePictureUrl),
+                            title: Text(
+                              "$firstName $lastName",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            trailing: chatDoc["total_unread"] == 0
+                                ? SizedBox()
+                                : Chip(
+                              backgroundColor: Colors.red[900],
+                              label: Text(
+                                "${chatDoc["total_unread"]}",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),
@@ -107,14 +99,28 @@ class ConversationsPage extends StatelessWidget {
     );
   }
 
-  String _getInitials(String fullName) {
-    final List<String> names = fullName.split(" ");
-    final StringBuffer initials = StringBuffer();
+  Widget _buildLeadingWidget(String? firstName, String? lastName, String? profilePictureUrl) {
+    final initials = (firstName?.isNotEmpty == true ? firstName![0] : '') +
+        (lastName?.isNotEmpty == true ? lastName![0] : '');
 
-    for (final name in names) {
-      initials.write(name[0]);
+    if (profilePictureUrl?.isNotEmpty == true) {
+      return CircleAvatar(
+        radius: 30,
+        backgroundImage: NetworkImage(profilePictureUrl!),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.black26,
+        child: Text(
+          initials.toUpperCase(),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      );
     }
-
-    return initials.toString();
   }
 }

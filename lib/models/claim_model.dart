@@ -19,4 +19,13 @@ class Claim {
       date: json['date'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'title': title,
+      'description': description,
+      'date': date,
+    };
+  }
 }
