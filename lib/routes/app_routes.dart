@@ -16,5 +16,6 @@ class AppRoutes {
   static const forgetPassword = '/forget-password';
   static const aboutUs = '/about-us';
   static const settings = '/settings';
+  static const admin = '/admin';
 
 }

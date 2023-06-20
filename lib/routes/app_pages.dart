@@ -1,5 +1,6 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:pfe/bindings/about_us_binding.dart';
+import 'package:pfe/bindings/admin_bindings.dart';
 import 'package:pfe/bindings/bottom_navigation_binding.dart';
 import 'package:pfe/bindings/add_order_binding.dart';
 import 'package:pfe/bindings/chat_binding.dart';
@@ -15,6 +16,7 @@ import 'package:pfe/bindings/settings_binding.dart';
 import 'package:pfe/bindings/signup_binding.dart';
 import 'package:pfe/views/about_us.dart';
 import 'package:pfe/views/add_order_page.dart';
+import 'package:pfe/views/admin_page.dart';
 import 'package:pfe/views/chat_page.dart';
 import 'package:pfe/views/claim_page.dart';
 import 'package:pfe/views/conversation_page.dart';
@@ -120,6 +122,11 @@ class AppPages {
       name: AppRoutes.settings,
       page: () =>  SettingsPage(),
       binding: SettingsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.admin,
+      page: () =>  AdminPage(),
+      binding: AdminBinding(),
     ),
   ];
 }
