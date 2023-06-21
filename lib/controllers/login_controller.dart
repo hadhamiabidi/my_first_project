@@ -72,15 +72,17 @@ class SigninController extends GetxController with BaseController {
         'isDriver': isDriver,
       });
       user.value = userObj;
-      if(currentUser.email=="admin@admin.com"){
-        Get.offAllNamed(AppRoutes.admin);
-      }else{
-        if (isDriver) {
-          Get.offAllNamed(AppRoutes.bottomNavigation);
-        } else {
-          Get.offAllNamed(AppRoutes.dashboard);
-        }
+      String routeName;
+
+      if (currentUser.email == "admin@admin.com") {
+        routeName = AppRoutes.admin;
+      } else if (isDriver) {
+        routeName = AppRoutes.bottomNavigation;
+      } else {
+        routeName = AppRoutes.dashboard;
       }
+
+      Get.offAllNamed(routeName);
 
     } on FirebaseAuthException catch (e) {
       hideLoading();

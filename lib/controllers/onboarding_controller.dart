@@ -31,15 +31,24 @@ class OnboardingController extends GetxController with BaseController {
         Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
 
         if (userData != null) {
-          bool isDriver = userData['isDriver'] ?? false;
+          bool isDriver = false;
+          String? userEmail = FirebaseAuth.instance.currentUser?.email;
 
-          if (isDriver) {
+          if (userData.containsKey('isDriver')) {
+            isDriver = userData['isDriver'];
+          }
+
+          if (userEmail == "admin@admin.com") {
+            // Navigate to the admin dashboard
+            Get.offAllNamed(AppRoutes.admin);
+          } else if (isDriver) {
             // Navigate to the driver dashboard
             Get.offAllNamed(AppRoutes.bottomNavigation);
           } else {
             // Navigate to the client dashboard
             Get.offAllNamed(AppRoutes.dashboard);
           }
+
           hideLoading();
         } else {
           // Handle the case when user data is not found
