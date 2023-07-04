@@ -17,5 +17,6 @@ class AppRoutes {
   static const aboutUs = '/about-us';
   static const settings = '/settings';
   static const admin = '/admin';
+  static const tracking = '/tracking';
 
 }

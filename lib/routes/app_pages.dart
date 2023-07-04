@@ -14,6 +14,7 @@ import 'package:pfe/bindings/order_details_binding.dart';
 import 'package:pfe/bindings/orders_binding.dart';
 import 'package:pfe/bindings/settings_binding.dart';
 import 'package:pfe/bindings/signup_binding.dart';
+import 'package:pfe/bindings/tracking_binding.dart';
 import 'package:pfe/views/about_us.dart';
 import 'package:pfe/views/add_order_page.dart';
 import 'package:pfe/views/admin_page.dart';
@@ -29,6 +30,7 @@ import 'package:pfe/views/orders_page.dart';
 import 'package:pfe/views/profile_page.dart';
 import 'package:pfe/views/settings_screen.dart';
 import 'package:pfe/views/signup_page.dart';
+import 'package:pfe/views/tracking_screen.dart';
 import '../bindings/dashboard_binding.dart';
 import '../bindings/profile_binding.dart';
 import '../views/all_orders_page.dart';
@@ -127,6 +129,11 @@ class AppPages {
       name: AppRoutes.admin,
       page: () =>  AdminPage(),
       binding: AdminBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.tracking,
+      page: () =>  TrackingScreen(),
+      binding: TrackingBinding(),
     ),
   ];
 }

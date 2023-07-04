@@ -20,14 +20,14 @@ class OrderDetailsPage extends StatelessWidget {
         children: [
           Container(
             height: 250,
-            child: GoogleMap(
+            child: Obx(() => GoogleMap(
               initialCameraPosition:
               orderDetailsController.getInitialCameraPosition(),
               onMapCreated: (controller) =>
               orderDetailsController.mapController = controller,
               markers: orderDetailsController.getMarkers(),
               polylines: orderDetailsController.getPolylines(),
-            ),
+            )),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -156,7 +156,7 @@ class OrderDetailsPage extends StatelessWidget {
                         if(orderDetailsController.isDriver==true && orderDetailsController.getOrder().status==1)
                           ElevatedButton(
                             onPressed: ()=>{
-                              orderDetailsController.setDelivred()
+                              orderDetailsController.setDelivered()
                             },
                             child: Text('Livré'),
                             style: ElevatedButton.styleFrom(

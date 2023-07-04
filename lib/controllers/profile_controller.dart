@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:pfe/config/base_controller.dart';
@@ -8,10 +7,12 @@ import 'package:pfe/routes/app_routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
-
+import 'package:location/location.dart';
 
 class ProfileController extends GetxController with BaseController {
   Rx<UserModel> currentUser = Rx<UserModel>(UserModel.empty());
+  RxBool isLocationTrackingEnabled = false.obs;
+
   @override
   void onReady() {
     super.onReady();
@@ -34,9 +35,10 @@ class ProfileController extends GetxController with BaseController {
 
         if (snapshot.exists) {
           // User data found in Firestore
-          Map<String, dynamic>? userData = snapshot.data() as Map<String, dynamic>?;
+          Map<String, dynamic>? userData =
+          snapshot.data() as Map<String, dynamic>?;
           // Set the user data into the currentUser object
-          currentUser.value = UserModel.fromJson(userData ?? {}); // Replace UserModel with your User model
+          currentUser.value = UserModel.fromJson(userData ?? {});
         } else {
           // User data not found in Firestore
           // Handle the scenario accordingly
@@ -50,13 +52,12 @@ class ProfileController extends GetxController with BaseController {
     }
   }
 
-  goToAboutUs() {
+  void goToAboutUs() {
     Get.toNamed(AppRoutes.aboutUs);
   }
 
-  goToSettings() {
+  void goToSettings() {
     Get.toNamed(AppRoutes.settings);
-
   }
 
   Future<void> addPicture() async {
@@ -72,7 +73,8 @@ class ProfileController extends GetxController with BaseController {
         final timestamp = DateTime.now().microsecondsSinceEpoch;
         final imageName = '${currentUser.uid}_$timestamp.jpg';
 
-        final storageReference = firebase_storage.FirebaseStorage.instance.ref().child('profile_images/$imageName');
+        final storageReference =
+        firebase_storage.FirebaseStorage.instance.ref().child('profile_images/$imageName');
         final uploadTask = storageReference.putFile(imageFile);
         await uploadTask.whenComplete(() {});
 
@@ -87,6 +89,7 @@ class ProfileController extends GetxController with BaseController {
     }
   }
 
-
-
+  goToTrackingScreen() {
+    Get.toNamed(AppRoutes.tracking);
+  }
 }

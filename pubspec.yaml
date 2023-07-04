@@ -48,6 +48,8 @@ dependencies:
   intl: ^0.18.1
   emoji_picker_flutter: ^1.6.0
   image_picker: ^0.8.9
+  location: ^4.4.0
+  flutter_mobx: ^2.0.1
 
 dev_dependencies:
   flutter_test:

@@ -142,8 +142,8 @@ class AddOrderController extends GetxController with BaseController {
             height: 400,
             child: GoogleMap(
               initialCameraPosition: CameraPosition(
-                target: selectedLatLng ?? LatLng(37.7749, -122.4194),
-                zoom: 12,
+                target: selectedLatLng ?? const LatLng(34.000, 9.000), // Set Tunisia coordinates here (latitude: 34, longitude: 9)
+                zoom: 6,
               ),
               onTap: (LatLng latLng) {
                 result = latLng;
@@ -164,5 +164,6 @@ class AddOrderController extends GetxController with BaseController {
       controller.text = "${selectedLatLng.latitude}, ${selectedLatLng.longitude}";
     }
   }
+
 
 }
