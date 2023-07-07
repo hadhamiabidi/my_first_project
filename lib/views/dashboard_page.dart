@@ -47,7 +47,6 @@ class DashboardPage extends StatelessWidget {
                   MyMenu(title: "Visualisation de la liste des commandes", icon: Icons.list, warna: Colors.brown, onPressed: () {
                     _controller.goToPage(1);
                   }),
-                  MyMenu(title: "Suivi en temps réel de l'état des commandes", icon: Icons.search, warna: Colors.pink, onPressed: () {}),
                   MyMenu(title: "Réclamation", icon: Icons.not_interested_outlined, warna: Colors.blue, onPressed: () {
                     _controller.goToPage(4);
                   }),
